@@ -1,0 +1,52 @@
+
+
+
+npm install -g create-react-app
+npm install -g gulp
+npm install
+
+set python2, if not node-gyp will fail
+
+brew has python 3 as default python
+pip is python2's tool -> deprecated
+virtualenv is pointing to old brew python2 -> not working
+
+pip -V
+pip uninstall virtualenv
+ls -lha $(which pip3)
+pip3 install --upgrade pip
+pip3 install virtualenv
+
+virtualenv ../env/python --python=/usr/local/Cellar/python@2/2.7.16/bin/python
+source ../env/python/bin/activate
+
+
+
+
+
+While installing python@2 with brew
+Error: The `brew link` step did not complete successfully
+The formula built, but is not symlinked into /usr/local
+Could not symlink bin/idle
+Target /usr/local/bin/idle
+is a symlink belonging to python. You can unlink it:
+  brew unlink python
+
+To force the link and overwrite all conflicting files:
+  brew link --overwrite python@2
+
+To list all files that would be deleted:
+  brew link --overwrite --dry-run python@2
+
+Possible conflicting files are:
+/usr/local/bin/idle -> /usr/local/Cellar/python/3.6.4_3/bin/idle
+/usr/local/bin/pydoc -> /usr/local/Cellar/python/3.6.4_3/bin/pydoc
+/usr/local/bin/python -> /usr/local/Cellar/python/3.6.4_3/bin/python
+/usr/local/bin/python-config -> /usr/local/Cellar/python/3.6.4_3/bin/python-config
+/usr/local/share/man/man1/python.1 -> /usr/local/Cellar/python/3.6.4_3/share/man/man1/python.1
+/usr/local/Frameworks/Python.framework/Headers -> /usr/local/Cellar/python/3.6.4_3/Frameworks/Python.framework/Headers
+/usr/local/Frameworks/Python.framework/Python -> /usr/local/Cellar/python/3.6.4_3/Frameworks/Python.framework/Python
+/usr/local/Frameworks/Python.framework/Resources -> /usr/local/Cellar/python/3.6.4_3/Frameworks/Python.framework/Resources
+/usr/local/Frameworks/Python.framework/Versions/Current -> /usr/local/Cellar/python/3.6.4_3/Frameworks/Python.framework/Versions/Current
+==> /usr/local/Cellar/python@2/2.7.16/bin/python -s setup.py --no-user-cfg install --force --verbose --single-version-externally-managed --rec
+
