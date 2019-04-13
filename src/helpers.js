@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 function millisecondsToHuman(ms) {
   const seconds = Math.floor((ms / 1000) % 60);
   const minutes = Math.floor((ms / 1000 / 60) % 60);
@@ -18,4 +20,12 @@ function pad(numberString, size) {
   return padded;
 }
 
-export { millisecondsToHuman };
+function dateToString(date) {
+  if (!date) {
+    return '-';
+  }
+
+  return moment(date).format('MMMM Do, h:mm a');
+}
+
+export { millisecondsToHuman, dateToString };
