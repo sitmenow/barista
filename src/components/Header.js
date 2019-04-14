@@ -1,7 +1,6 @@
 import React from 'react';
-import moment from 'moment';
 
-import { millisecondsToHuman } from '../helpers'
+import { dateToString } from '../helpers'
 
 const Header = (props) => {
   const containerStyle = {
@@ -39,7 +38,7 @@ const Header = (props) => {
            <span className='date'>{ props.barista.role }</span>
          </div>
          <br/>
-          Last open time: { moment(props.branch.lastOpeningTime).format('MMMM Do, h:mm a') }
+          Last open time: { dateToString(props.branch.lastOpeningTime) }
        </div>
       </div>
     </div>
