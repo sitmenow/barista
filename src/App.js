@@ -9,7 +9,7 @@ import './semantic/dist/semantic.css';
 import Header from './components/Header';
 import Menu from './components/Menu';
 import TurnsList from './TurnsList';
-import API from './api/client';
+import API from './api';
 import { branchReducer, baristaReducer, turnsReducer } from './reducers';
 import { setBranch, setBarista, setTurns } from './actions';
 
@@ -24,7 +24,7 @@ const initialState = {
     id: null,
     name: null,
     logo: null,
-    lastOpeningTime: new Date(),
+    lastOpeningTime: null,
   },
   barista: {
     id: null,
@@ -41,104 +41,54 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.api = new API(props.branchId, props.baristaId);
+    // The following parameters should come from configuration
+    this._api = new API({
+      protocol: 'http',
+      host: 'localhost',
+      port: 8080,
+      token: null,
+      version: 'v1',
+    });
   }
 
   componentDidMount() {
     store.subscribe(() => this.forceUpdate());
 
-    this.loadBranch();
-    this.loadProfile();
-    this.loadTurns();
+    this.load();
   }
 
   openBranch = () => {
+    // this._branch.open();
     this.setState({ lastOpeningTime: new Date() });
   }
 
-  loadBranch = () => {
-    const branch = {
-      id: 'a2242d74-174d-4e41-976b-6456423a2ffb',
-      lastOpeningTime: new Date(),
-    };
-
-    store.dispatch(setBranch(branch));
+  closeBranch = () => {
+    // this._branch.close();
   }
 
-  loadProfile = () => {
+  load = async () => {
+    await this.loadBranch();
+    await this.loadBarista();
+    await this.loadTurns();
+  }
+
+  loadBranch = async () => {
+    this._brand = await this._api.brand('brand-test');
+    this._branch = await this._brand.branch('branch-test')
+    store.dispatch(setBranch(this._branch));
+  }
+
+  loadBarista = async () => {
     const barista = {
       id: 'a2242d74-174d-4e41-976b-6456423a2ffc',
       name: 'Gerardo Reyes',
       role: 'Barista',
     };
-
     store.dispatch(setBarista(barista));
   }
 
-  loadTurns = () => {
-    const turns = [
-      {
-        id: 'a2242d74-174d-4e41-976b-6456423a2ffa',
-        name: 'Emmanuel Diaz',
-        company: 'Scalable Press',
-        companyShortName: 'SP',
-        product: 'Latte caliente deslactosada',
-        requestedTime: new Date(),
-        status: 'pending',
-        color: 'blue',
-      },
-      {
-        id: 'fb52256a-5d61-48e5-bd86-70f6e45779e8',
-        name: 'Abraham Lopez',
-        company: '100 Ladrillos',
-        companyShortName: '100L',
-        product: 'Expresso cortado doble',
-        requestedTime: new Date(),
-        status: 'pending',
-        color: 'red',
-      },
-      {
-        id: 'fb52256a-5d61-48e5-bd86-70f6e45779e0',
-        name: 'David Aguinaga',
-        company: 'Envato',
-        companyShortName: 'ENV',
-        product: 'Chai frio deslactosada',
-        requestedTime: new Date(),
-        status: 'pending',
-        color: 'red',
-      },
-      {
-        id: 'fb52256a-5d61-48e5-bd86-70f6e45779e1',
-        name: 'Armando Rodriguez',
-        company: 'Envato',
-        companyShortName: 'ENV',
-        product: 'Chocolate caliente',
-        requestedTime: new Date(),
-        status: 'pending',
-        color: 'red',
-      },
-      {
-        id: 'fb52256a-5d61-48e5-bd86-70f6e45779e6',
-        name: 'Raul Lopez Lopez',
-        company: '100 Ladrillos',
-        companyShortName: '100L',
-        product: 'Americano doble',
-        requestedTime: new Date(),
-        status: 'pending',
-        color: 'red',
-      },
-      {
-        id: 'fb52256a-5d61-48e5-bd86-70f6e45779a6',
-        name: 'Alejandro Valenzuela',
-        company: 'Billpocket',
-        companyShortName: 'BP',
-        product: 'Tizana menta + phur fria',
-        requestedTime: new Date(),
-        status: 'pending',
-        color: 'red',
-      },
-    ];
-
+  loadTurns = async () => {
+    const turns = await this._branch.turns();
     store.dispatch(setTurns(turns));
   }
 
