@@ -1,10 +1,44 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import './index.css';
+import App from './components/app/App';
+import * as serviceWorker from './serviceWorker';
+import { rootReducer } from './reducer';
+import API from './api';
+
+const store = createStore(
+  rootReducer,
+  applyMiddleware(thunk)
+);
+
+const session = {
+  brandId: 'brand-id',
+  branchId: 'branch-id',
+  baristaId: 'barista-id',
+  token: 'token',
+  baseUrl: 'http://localhost:8080/api',
+};
+
+new API({
+  protocol: 'http',
+  host: 'localhost',
+  port: '8080',
+  token: 'token',
+  version: 'v1',
+});
+
+// Call API here to know if we are currently authenticated
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App session={session}/>
+  </Provider>,
+  document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
