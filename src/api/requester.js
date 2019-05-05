@@ -15,6 +15,10 @@ class Requester {
     return this._request(path, 'POST', body);
   }
 
+  put(path, body) {
+    return this._requester(path, 'PUT', body);
+  }
+
   _request(path, method, body) {
     const baseUrl = this._buildBaseUrl();
     const url = `${baseUrl}${path}`
