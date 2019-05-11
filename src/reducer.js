@@ -24,7 +24,7 @@ const barista = {
 const actions = {
   SET_BRAND: 'SET_BRAND',
   SET_BRANCH: 'SET_BRANCH',
-  SET_BARITSTA: 'SET_BARISTA',
+  SET_BARISTA: 'SET_BARISTA',
   LOCK_BARISTA: 'LOCK_BARISTA',
   UNLOCK_BARISTA: 'UNLOCK_BARISTA',
   START_LOAD: 'START_LOAD',
@@ -34,7 +34,7 @@ const actions = {
 function brandReducer(state = brand, action) {
   switch(action.type) {
     case actions.SET_BRAND:
-      const { id, name } = action.branch;
+      const { id, name } = action.brand;
       return { id, name };
     default:
       return state;
