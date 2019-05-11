@@ -1,42 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk'
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 
 import './index.css';
-import App from './components/app/App';
+import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { rootReducer } from './reducer';
+import Auth from './auth';
 import API from './api';
+import store from './store';
 
-const store = createStore(
-  rootReducer,
-  applyMiddleware(thunk)
-);
-
-const session = {
-  brandId: 'brand-id',
-  branchId: 'branch-id',
-  baristaId: 'barista-id',
-  token: 'token',
-  baseUrl: 'http://localhost:8080/api',
-};
-
-new API({
+const auth = new Auth();
+const api = new API({
   protocol: 'http',
   host: 'localhost',
   port: '8080',
-  token: 'token',
   version: 'v1',
 });
 
-// Call API here to know if we are currently authenticated
+const index = (props) => {
+  return (
+    <Provider store={store}>
+      <App auth={auth} api={api.getInstance()} {...props} />
+    </Provider>
+   );
+};
+
+const logout = ({ match, location, history }) => auth.logout();
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App session={session}/>
-  </Provider>,
+  <Router component={App}>
+    <Route path="/" render={index} />
+    <Route exact={true} path="/logout" render={logout} />
+  </Router>,
   document.getElementById('root')
 );
 
