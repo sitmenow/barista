@@ -6,6 +6,10 @@ class API {
     this._requester = new Requester({ protocol, host, port, token, version });
   }
 
+  setToken(token) {
+    this._requester.setToken(token);
+  }
+
   async getBrands() {
     const path = this._buildBrandsPath();
     const response = await this._requester.get(path);

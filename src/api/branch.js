@@ -6,7 +6,7 @@ class Branch {
     this.id = _id;
     this.name = _name;
     this.lastOpeningTime = _lastOpeningTime;
-    this.brand = new Brand(_brand);
+    this.brand = _brand;
     this._requester = requester;
   }
 

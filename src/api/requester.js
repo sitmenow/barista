@@ -7,6 +7,10 @@ class Requester {
     this._version = version;
   }
 
+  setToken(token) {
+    this._token = token;
+  }
+
   get(path, query = '') {
     return this._request(path + query, 'GET');
   }
@@ -16,15 +20,19 @@ class Requester {
   }
 
   put(path, body) {
-    return this._requester(path, 'PUT', body);
+    return this._request(path, 'PUT', body);
   }
 
   _request(path, method, body) {
     const baseUrl = this._buildBaseUrl();
     const url = `${baseUrl}${path}`
-    console.log(`Request: ${url}`)
+    const headers = {
+      'Authorization': `Bearer ${this._token}`,
+    };
 
-    const request = new Request(url, { method, body });
+    console.log(`Request: ${url} ${headers}`)
+
+    const request = new Request(url, { method, body, headers });
 
     return fetch(request)
       .then((response) => {
@@ -32,6 +40,7 @@ class Requester {
           throw new Error('Something went wrong on api server!');
         }
 
+        console.log(response)
         return response.json();
       })
       .then(response => console.debug(response) || response)
