@@ -10,6 +10,10 @@ class API {
     this._requester.setToken(token);
   }
 
+  removeToken() {
+    this._requester.setToken(null);
+  }
+
   async getBrands() {
     const path = this._buildBrandsPath();
     const response = await this._requester.get(path);
@@ -26,6 +30,10 @@ class API {
 
   brand(params) {
     return new Brand(params, this._requester);
+  }
+
+  async getUser() {
+    return;
   }
 
   _buildBrandsPath() {

@@ -2,14 +2,16 @@ import API from '../../api';
 import { actions } from './reducer'
 import { actions as globalActions } from '../../reducer';
 
+
+const api = new API().getInstance();
+
 export const loadTurns = () =>
   async (dispatch: Function, getState: Function) => {
-    const { brand, branch, barista } = getState();
+    const { barista } = getState();
+    const { branch } = barista;
+    const { brand } = branch;
 
-    const api = new API().getInstance();
-    const brandResource = api.brand({
-      _id: brand.id,
-    });
+    const brandResource = api.brand({ _id: brand.id });
     const branchResource = brandResource.branch({
       _id: branch.id,
       _brand: brandResource,
@@ -29,11 +31,10 @@ export const loadTurns = () =>
 
 export const serveTurn = (turnId) =>
   async (dispatch: Function, getState: Function) => {
-    const { brand, branch, barista } = getState();
+    const { barista } = getState();
 
-    const api = new API().getInstance();
-    const brandResource = api.brand({ _id: brand.id });
-    const branchResource = brandResource.branch({ _id: branch.id, _brand: brandResource });
+    const brandResource = api.brand({ _id: barista.branch.brand.id });
+    const branchResource = brandResource.branch({ _id: barista.branch.id, _brand: brandResource });
     const turnResource = branchResource.turn({ _id: turnId, _branch: branchResource });
 
     dispatch({ type: globalActions.START_LOAD });
@@ -53,11 +54,10 @@ export const serveTurn = (turnId) =>
 
 export const rejectTurn = (turnId) =>
   async (dispatch: function, getState: function) => {
-    const { brand, branch, barista } = getState();
+    const { barista } = getState();
 
-    const api = new API().getInstance();
-    const brandResource = api.brand({ _id: brand.id });
-    const branchResource = brandResource.branch({ _id: branch.id, _brand: brandResource });
+    const brandResource = api.brand({ _id: barista.branch.brand.id });
+    const branchResource = brandResource.branch({ _id: barista.branch.id, _brand: brandResource });
     const turnResource = branchResource.turn({ _id: turnId, _branch: branchResource });
 
     dispatch({ type: globalActions.START_LOAD });
@@ -79,11 +79,10 @@ export const prepareTurn = (turnId) =>
   async (dispatch: function, getState: function) => {
     // LOCK BARISTA && UPDATE_TURN (status: preparing)
 
-    const { brand, branch, barista } = getState();
+    const { barista } = getState();
 
-    const api = new API().getInstance();
-    const brandResource = api.brand({ _id: brand.id });
-    const branchResource = brandResource.branch({ _id: branch.id, _brand: brandResource });
+    const brandResource = api.brand({ _id: barista.branch.brand.id });
+    const branchResource = brandResource.branch({ _id: barista.branch.id, _brand: brandResource });
     const turnResource = branchResource.turn({ _id: turnId, _branch: branchResource });
 
     dispatch({ type: globalActions.START_LOAD });
@@ -104,11 +103,10 @@ export const unprepareTurn = (turnId) =>
   async (dispatch: function, getState: function) => {
     // UNLOCK BARISTA && UPDATE_TURN (status: waiting)
 
-    const { brand, branch, barista } = getState();
+    const { barista } = getState();
 
-    const api = new API().getInstance();
-    const brandResource = api.brand({ _id: brand.id });
-    const branchResource = brandResource.branch({ _id: branch.id, _brand: brandResource });
+    const brandResource = api.brand({ _id: barista.branch.brand.id });
+    const branchResource = brandResource.branch({ _id: barista.branch.id, _brand: brandResource });
     const turnResource = branchResource.turn({ _id: turnId, _branch: branchResource });
 
     dispatch({ type: globalActions.START_LOAD });

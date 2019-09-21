@@ -2,88 +2,124 @@ import { combineReducers } from 'redux';
 
 import { turnsReducer } from './components/turns/reducer';
 
-const brand = {
-  id: null,
-  name: null,
+
+const app = {
+  status: {
+    loading: false,
+  },
 };
 
-const branch = {
+const user = {
+  id: null,
+  apiToken: null, // :thinking_face:
+  name: '',
+  roles: new Set(['customer']),
+  status: {
+    authenticated: false,
+  },
+};
+
+const barista = {
+  status: {
+    isLocked: false,
+  },
+  branch: {
     id: null,
     name: null,
     logo: null,
     lastOpeningTime: null,
+    brand: {
+      id: null,
+      name: null,
+    },
+  },
 };
 
-const barista = {
-    id: null,
-    name: 'Gerardo Reyes',
-    role: 'Barista',
-    isPreparing: false,
+const customer = {
+  status: {},
 };
 
 const actions = {
-  SET_BRAND: 'SET_BRAND',
-  SET_BRANCH: 'SET_BRANCH',
-  SET_BARISTA: 'SET_BARISTA',
+  UPDATE_USER: 'UPDATE_USER',
+  UPDATE_CUSTOMER: 'UPDATE_CUSTOMER',
+  UPDATE_BARISTA: 'UPDATE_BARISTA',
   LOCK_BARISTA: 'LOCK_BARISTA',
   UNLOCK_BARISTA: 'UNLOCK_BARISTA',
   START_LOAD: 'START_LOAD',
   END_LOAD: 'END_LOAD',
+  UPDATE_AUTHENTICATION: 'UPDATE_AUTHENTICATION',
 };
 
-function brandReducer(state = brand, action) {
-  switch(action.type) {
-    case actions.SET_BRAND:
-      const { id, name } = action.brand;
-      return { id, name };
-    default:
-      return state;
-  }
-}
-
-function branchReducer(state = branch, action) {
-  switch(action.type) {
-    case actions.SET_BRANCH:
-      const { id, name, lastOpeningTime, logo } = action.branch;
-      return { id, name, lastOpeningTime, logo };
-    default:
-      return state;
-  }
+function customerReducer(state = customer, action) {
+  return state;
 }
 
 function baristaReducer(state = barista, action) {
+  let status;
+
   switch(action.type) {
-    case actions.SET_BARISTA:
-      return Object.assign(action.barista, { isPreparing: false });
+    case actions.UPDATE_BARISTA:
+      const brand = {
+        id: action.brand.id,
+        name: action.brand.name,
+      }
+      const branch = {
+        brand,
+        id: action.branch.id,
+        name: action.branch.name,
+        lastOpeningTime: action.branch.lastOpeningTime,
+        logo: action.branch.logo,
+      };
+      status = {
+        isLocked: false,
+      };
+
+      return { branch, status };
     case actions.LOCK_BARISTA:
-      return Object.assign({}, state, { isPreparing: true });
+      status = Object.assign({}, state.status, { isLocked: true });
+      return Object.assign({}, state, status);
     case actions.UNLOCK_BARISTA:
-      return Object.assign({}, state, { isPreparing: false });
+      status = Object.assign({}, state.status, { isLocked: false });
+      return Object.assign({}, state, status);
     default:
       return state;
   }
 }
 
-function loadingReducer(state=null, action) {
+function userReducer(state=user, action) {
+  let status;
+
+  switch(action.type) {
+    case actions.UPDATE_AUTHENTICATION:
+      status = { authenticated: action.authenticated };
+      return Object.assign({}, state, { status });
+    default:
+      return state;
+  }
+}
+
+function appReducer(state=app, action) {
+  let status;
+
   switch(action.type) {
     case actions.START_LOAD:
-      return true;
+      status = { loading: true };
+      return Object.assign({}, state, { status });
     case actions.END_LOAD:
-      return false;
+      status = { loading: false };
+      return Object.assign({}, state, { status });
     default:
-      return null;
+      return state;
   }
 }
 
 const rootReducer = combineReducers({
-  brand: brandReducer,
-  branch: branchReducer,
+  app: appReducer,
+  user: userReducer,
   barista: baristaReducer,
+  customer: customerReducer,
   turns: turnsReducer,
-  isLoading: loadingReducer,
 });
 
-export {
-  actions,
-  rootReducer,
-};
+
+export { actions, rootReducer };
