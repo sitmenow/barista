@@ -3,35 +3,21 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 
+import API from './api';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import Auth from './auth';
-import API from './api';
 import store from './store';
+import { actions } from './reducer';
 
-const auth = new Auth();
-const api = new API({
-  protocol: 'http',
-  host: 'localhost',
-  port: '8080',
-  version: 'v1',
-});
-
-const index = (props) => {
-  return (
-    <Provider store={store}>
-      <App auth={auth} api={api.getInstance()} {...props} />
-    </Provider>
-   );
-};
-
-const logout = ({ match, location, history }) => auth.logout();
 
 ReactDOM.render(
-  <Router component={App}>
-    <Route path="/" render={index} />
-    <Route exact={true} path="/logout" render={logout} />
+  <Router>
+    <Route path="/" render={(props) => (
+      <Provider store={store}>
+        <App {...props} />
+      </Provider>
+    )} />
   </Router>,
   document.getElementById('root')
 );
