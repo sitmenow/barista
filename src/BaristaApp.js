@@ -23,19 +23,10 @@ class BaristaApp extends React.Component {
   componentDidMount() {
   }
 
-  containerStyle = {
-    margin: '20px',
-  }
-
-  columnStyle = {
-    maxWidth: '480px',
-    minWidth: '420px',
-  }
-
   render() {
     return (
-      <div style={ this.containerStyle } className='ui two column centered grid'>
-        <div style={ this.columnStyle } className='column'>
+      <div className='seven wide column'>
+        <div className='column'>
           <Dashboard />  // Here we could decide what to render, barista or customer
           <Menu />
           <Turns />

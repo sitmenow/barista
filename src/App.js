@@ -8,6 +8,7 @@ import { login, logout, syncUser, isUserAuthenticated } from './actions';
 import AdminApp from './AdminApp';
 import BaristaApp from './BaristaApp';
 import CustomerApp from './CustomerApp';
+import UserMenu from './components/user-menu/UserMenu';
 // Styles
 import './semantic/dist/semantic.css';
 
@@ -33,25 +34,29 @@ class App extends React.Component {
     this.props.syncUser();
   }
 
-  // <Route exact={true} path="/admin" render={(props) => (<App {...props} />)} />
   render() {
     return (
-      <Router>
-        {/* Admin */}
-        // ADMIN DASHBOARD - INCLUDES ALL THE ORGS
-        <Route exact={true} path="/admin" render={(props) => (<AdminApp {...props} />)}/>
+      <>
+        <div className='ui relaxed grid container' style={{ marginTop: 0, marginBottom: 0, height: '100%', minWidth: '900px' }}>
+            <UserMenu />
+            <Router>
+              {/* Admin */}
+              <Route exact={true} path="/admin" render={(props) => (<AdminApp {...props} />)}/>
 
-        {/* Barista */}
-        // BARISTA DASHBOARD - INCLUDES ALL BRANCHES AVAILABLE FOR THE BARISTA
-        <Route exact={true} path="/barista" render={(props) => (<BaristaApp {...props} />)} />
+              {/* Barista */}
+              <Route exact={true} path="/barista" render={(props) => (<BaristaApp {...props} />)} />
 
-        {/* Customer */}
-        <Route exact={true} path="/" render={() => (<span>CUSTOMER DASHBOARD - INCLUDES ALL BRANCHES AVAILABLE FOR THE CUSTOMER</span>) }/>
-        <Route exact={true} path="/profile" render={() => (<span>CUSTOMER PROFILE</span>) }/>
-        <Route exact={true} path="/turns" render={() => (<span>CUSTOMER HISTORY OF TURNS</span>) }/>
-        <Route exact={true} path="/brands/:brandId/" render={() => (<span>BRAND DETAILS </span>) }/>
-        <Route exact={true} path="/brands/:brandId/branches/:branchId" render={() => (<span>BRANCH DETAILS + CUSTOMER TURNS IN BRANCH</span>) }/>
-      </Router>
+              {/* Customer */}
+              <Route exact={true} path="/" render={(props) => (
+                <CustomerApp {...props} />
+              )} />
+              <Route exact={true} path="/profile" render={() => (<span>CUSTOMER PROFILE</span>) }/>
+              <Route exact={true} path="/turns" render={() => (<span>CUSTOMER HISTORY OF TURNS</span>) }/>
+              <Route exact={true} path="/brands/:brandId/" render={() => (<span>BRAND DETAILS </span>) }/>
+              <Route exact={true} path="/brands/:brandId/branches/:branchId" render={() => (<span>BRANCH DETAILS + CUSTOMER TURNS IN BRANCH</span>) }/>
+            </Router>
+        </div>
+      </>
     );
   }
 }
