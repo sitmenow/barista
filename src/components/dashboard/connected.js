@@ -6,8 +6,8 @@ import { loadBranch, loadBarista } from './actions';
 
 const mapStateToDashboardProps = (state) => {
   const branch = {
-    name: state.branch.name,
-    lastOpeningTime: state.branch.lastOpeningTime,
+    name: state.barista.branch.name,
+    lastOpeningTime: state.barista.branch.lastOpeningTime,
   };
 
   const barista = {

@@ -1,70 +1,70 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 
-// import logo from './logo.svg';
-import './App.css';
+import { login, logout, syncUser, isUserAuthenticated } from './actions';
+// Components
+import AdminApp from './AdminApp';
+import BaristaApp from './BaristaApp';
+import CustomerApp from './CustomerApp';
+import AppMenu from './components/app-menu/AppMenu';
+// Styles
 import './semantic/dist/semantic.css';
 
-import Dashboard from './components/dashboard/connected';
-import Menu from './components/menu/Menu';
-import Turns from './components/turns/connected';
-import store from './store';
-import { actions } from './reducer';
+
+const mapStateToAppProps = (state, props) => Object.assign({}, state, props);
+
+const mapDispatchToAppProps = (dispatch) =>
+  bindActionCreators({ login, logout, syncUser, isUserAuthenticated }, dispatch);
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.auth = props.auth;
-    this.api = props.api;
-
-    this.handleAuthentication(
-      props.location.hash, props.history, this.handleAuthorization.bind(this)
-    );
-  }
-
-  handleAuthorization(token, profile) {
-    this.api.setToken(token)
-    const key = 'https://sitmenow:auth0:com/metadata';
-    const { brand, branch, hostess } = profile[key];
-    store.dispatch({ type: actions.SET_BRAND, brand });
-    store.dispatch({ type: actions.SET_BRANCH, branch });
-    store.dispatch({ type: actions.SET_BARISTA, barista: hostess });
-  }
-
-  handleAuthentication(hash, history, cb) {
-    if (/access_token|id_token|error/.test(hash)) {
-      return this.auth.handleAuthentication(history, cb);
+    if (!this.props.isUserAuthenticated()) {
+      // We need to login before mount happens
+      this.props.login(this.props.location.hash, this.props.history);
     }
-
-    if (!this.auth.isAuthenticated()) {
-      this.auth.login();
-    }
+    // At this moment we still do not know if the user has been
+    // authenticated or not so we continue the execution.
   }
 
   componentDidMount() {
-    // store.subscribe(() => this.forceUpdate());
+    this.props.syncUser();
   }
 
   containerStyle = {
-    margin: '20px',
-  }
-
-  columnStyle = {
-    maxWidth: '480px',
-    minWidth: '420px',
-  }
+   marginTop: 0,
+   marginBottom: 0,
+   height: '100%',
+   minWidth: '900px',
+  };
 
   render() {
     return (
-      <div style={ this.containerStyle } className='ui two column centered grid'>
-        <div style={ this.columnStyle } className='column'>
-          <Dashboard />
-          <Menu />
-          <Turns />
+      <>
+        <div className='ui relaxed grid container' style={ this.containerStyle }>
+          <AppMenu />
+
+          <Router>
+            {/* Admin */}
+            <Route exact={true} path="/admin" render={(props) => (<AdminApp {...props} />)}/>
+
+            {/* Barista */}
+            <Route exact={true} path="/barista" render={(props) => (<BaristaApp {...props} />)} />
+
+            {/* Customer */}
+            <Route exact={true} path="/" render={(props) => (
+              <CustomerApp {...props} />
+            )} />
+            <Route exact={true} path="/profile" render={() => (<span>CUSTOMER PROFILE</span>) }/>
+            <Route exact={true} path="/turns" render={() => (<span>CUSTOMER HISTORY OF TURNS</span>) }/>
+          </Router>
         </div>
-      </div>
+      </>
     );
   }
 }
 
-export default App;
+export default connect(mapStateToAppProps, mapDispatchToAppProps)(App);
