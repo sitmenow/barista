@@ -1,9 +1,14 @@
 import Requester from './requester';
 import Brand from './brand';
+import User from './user';
 
 class API {
   constructor({ protocol, host, port, token, version }) {
     this._requester = new Requester({ protocol, host, port, token, version });
+  }
+
+  get requester() {
+    return this._requester;
   }
 
   setToken(token) {
@@ -14,26 +19,24 @@ class API {
     this._requester.setToken(null);
   }
 
-  async getBrands() {
+  getUser(userId) {
+    const path = this._buildUserPath(userId);
+    return this._requester.get(path)
+      .then(response => new User(response, this._requester));
+  }
+
+  getBrands() {
     const path = this._buildBrandsPath();
-    const response = await this._requester.get(path);
+    const response = this._requester.get(path);
 
     return new Brand(response, this._requester);
   }
 
-  async getBrand(brandId) {
+  getBrand(brandId) {
     const path = this._buildBrandPath(brandId);
-    const response = await this._requester.get(path);
+    const response = this._requester.get(path);
 
     return new Brand(response, this._requester);
-  }
-
-  brand(params) {
-    return new Brand(params, this._requester);
-  }
-
-  async getUser() {
-    return;
   }
 
   _buildBrandsPath() {
@@ -42,6 +45,10 @@ class API {
 
   _buildBrandPath(brandId) {
     return `/brands/${brandId}`
+  }
+
+  _buildUserPath(userId) {
+    return `/users/${userId}`;
   }
 }
 

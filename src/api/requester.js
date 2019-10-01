@@ -1,3 +1,11 @@
+class RequestError extends Error {
+  constructor(statusCode, message) {
+    super(message);
+
+    this.statusCode = statusCode;
+  }
+}
+
 class Requester {
   constructor({ protocol, host, port, token, version }) {
     this._host = host;
@@ -28,16 +36,29 @@ class Requester {
     const url = `${baseUrl}${path}`
     const headers = {
       'Authorization': `Bearer ${this._token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
     };
 
-    console.log(`Request: ${url} ${headers}`)
+    console.log('Request: ', url, headers, body);
 
-    const request = new Request(url, { method, body, headers });
+    const request = new Request(
+      url,
+      { method,
+        headers,
+        body: JSON.stringify(body),
+      }
+    );
 
     return fetch(request)
       .then((response) => {
-        if (response.status < 200 && response.status >= 300) {
-          throw new Error('Something went wrong on api server!');
+        if (response.status < 200 || response.status >= 300) {
+            console.log(response);
+            return response.json()
+              .then((body) => {
+                  console.log(body);
+                  throw new RequestError(response.status, body);
+              });
         }
 
         console.log(response)
@@ -46,7 +67,7 @@ class Requester {
       .then(response => console.debug(response) || response)
       .catch((error) => {
         console.error(error);
-        throw error;
+        return Promise.reject(error);
       });
   }
 

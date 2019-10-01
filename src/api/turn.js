@@ -1,14 +1,14 @@
 import Branch from './branch';
 
 class Turn {
-  constructor({ _id, name, _requestedTime, _metadata, _branch } = {}, requester) {
-    const { company, product } = _metadata || {};
-    this.id = _id;
+  constructor({ id, name, requestedTime, metadata, branch } = {}, requester) {
+    const { company, product } = metadata || {};
+    this.id = id;
     this.name = name;
-    this.requestedTime = _requestedTime;
+    this.requestedTime = requestedTime;
     this.company = company;
     this.product = product;
-    this.branch = _branch;
+    this.branch = branch;
     this._requester = requester;
   }
 

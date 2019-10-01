@@ -14,7 +14,7 @@ function turnsReducer(state=[], action) {
     case actions.SET_TURNS:
       return action.turns;
     case actions.REMOVE_TURN:
-      return state.filter(turn => turn.id != action.turnId);
+      return state.filter(turn => turn.id !== action.turnId);
     default:
       return state;
   }

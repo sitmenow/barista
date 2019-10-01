@@ -4,91 +4,33 @@ import { connect } from 'react-redux';
 
 import { } from './actions';
 // Components
-import Dashboard from './components/dashboard/connected';
-import Menu from './components/menu/Menu';
-import Turns from './components/turns/connected';
+import BranchesDashboard from './components/branchesDashboard/BranchesDashboard';
+import CustomerTurnsDashboard from './components/turnsDashboard/CustomerTurnsDashboard';
 // Styles
 
 
-const mapStateToAppProps = (state, props) => Object.assign({}, state, props);
+const mapStateToAppProps = (state, props) => {
+  const customer = state.user.roles.customer;
+  const branch = state.app.selectedBranch;
+  const user = {
+    name: state.user.name,
+    email: state.user.email,
+  };
+
+  return Object.assign({}, props, { customer, branch, user });
+};
 
 const mapDispatchToAppProps = (dispatch) =>
   bindActionCreators({ }, dispatch);
 
 class CustomerApp extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-  }
-
-  cardStyle = {
-    width: '200px',
-  };
-
   render() {
+    const { user, customer, branch } = this.props;
+
     return (
-      <div className='twelve wide column' style={{ paddingRight: 0 }}>
-        <div className='column'>
-
-          <div class="ui cards">
-            <div class="card" style={ this.cardStyle }>
-              <div class="image">
-                <img src='/mutuo_lobby.jpg'/>
-              </div>
-              <div className="content">
-                <a className="header">
-                  Mutuo Hidalgo
-                </a>
-                <div class="meta">
-                  <a>Lobby</a>
-                  <span class="right floated">
-                    <span style={{ marginLeft: '4px' }}>6</span>
-                    <i class="ticket alternate right icon"></i>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="card" style={ this.cardStyle }>
-              <div class="image">
-                <img src='/mutuo_rooftop.jpg'/>
-              </div>
-              <div className="content">
-                <a className="header">
-                  Mutuo Hidalgo
-                </a>
-                <div class="meta">
-                  <a>Roof Top</a>
-                  <span class="right floated">
-                    <span style={{ marginLeft: '4px' }}>23</span>
-                    <i class="ticket alternate right icon"></i>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="card" style={ this.cardStyle }>
-              <div class="image">
-                <img style={{ height: '125px' }} src='/terrible_juan_wizeline.jpg'/>
-              </div>
-              <div className="content">
-                <a className="header">
-                  El Terrible Juan
-                </a>
-                <div class="meta">
-                  <a>Wizeline</a>
-                  <span class="right floated">
-                    <span style={{ marginLeft: '4px' }}>23</span>
-                    <i class="ticket alternate right icon"></i>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
+      <div className='seven wide column'>
+        { branch && <CustomerTurnsDashboard user={ user } customer={ customer } branch={ branch } /> }
+        { !branch && <BranchesDashboard /> }
       </div>
     );
   }

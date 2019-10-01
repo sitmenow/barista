@@ -1,9 +1,9 @@
 import Branch from './branch';
 
 class Brand {
-  constructor({ _id, _name } = {}, requester) {
-    this.id = _id;
-    this.name = _name;
+  constructor({ id, name } = {}, requester) {
+    this.id = id;
+    this.name = name;
     this._requester = requester;
   }
 
@@ -20,10 +20,6 @@ class Brand {
     const response = await this._requester.get(path);
 
     return new Branch(response, this._requester);
-  }
-
-  branch(params) {
-    return new Branch(params, this._requester);
   }
 
   _buildBranchesPath() {

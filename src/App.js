@@ -3,35 +3,31 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 
-import { login, logout, syncUser, isUserAuthenticated } from './actions';
+import { login, logout, isUserAuthenticated, syncUser } from './actions';
 // Components
 import AdminApp from './AdminApp';
 import BaristaApp from './BaristaApp';
 import CustomerApp from './CustomerApp';
-import AppMenu from './components/app-menu/AppMenu';
+import Menu from './components/menu/Menu';
 // Styles
 import './semantic/dist/semantic.css';
 
 
-const mapStateToAppProps = (state, props) => Object.assign({}, state, props);
+const mapStateToAppProps = (state, props) => props;
 
 const mapDispatchToAppProps = (dispatch) =>
-  bindActionCreators({ login, logout, syncUser, isUserAuthenticated }, dispatch);
+  bindActionCreators({ login, logout, isUserAuthenticated, syncUser }, dispatch);
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    if (!this.props.isUserAuthenticated()) {
-      // We need to login before mount happens
+    if (this.props.isUserAuthenticated()) {
+      // TODO: Rename this function since it does more than it says
+      this.props.syncUser();
+    } else {
       this.props.login(this.props.location.hash, this.props.history);
     }
-    // At this moment we still do not know if the user has been
-    // authenticated or not so we continue the execution.
-  }
-
-  componentDidMount() {
-    this.props.syncUser();
   }
 
   containerStyle = {
@@ -45,7 +41,7 @@ class App extends React.Component {
     return (
       <>
         <div className='ui relaxed grid container' style={ this.containerStyle }>
-          <AppMenu />
+          <Menu />
 
           <Router>
             {/* Admin */}
@@ -60,6 +56,7 @@ class App extends React.Component {
             )} />
             <Route exact={true} path="/profile" render={() => (<span>CUSTOMER PROFILE</span>) }/>
             <Route exact={true} path="/turns" render={() => (<span>CUSTOMER HISTORY OF TURNS</span>) }/>
+            <Route exact={true} path="/out" render={() => (this.props.logout()) }/>
           </Router>
         </div>
       </>

@@ -108,10 +108,10 @@ export default class Auth0 extends Auth {
   }
 
   getUserProfile(cb) {
-    this._auth0.client.userInfo(this.accessToken, (err, profile) => {
+    this._auth0.client.userInfo(this._accessToken, (err, profile) => {
       if (err) return;
 
-      cb(this._idToken, profile);
+      cb(this._accessToken, profile);
     });
   }
 }
