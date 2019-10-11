@@ -2,7 +2,7 @@ import React from 'react';
 
 class Menu extends React.Component {
   itemStyle = {
-    width: '33.34%',
+    width: '50%',
     display: 'block',
     textAlign: 'center',
   };
@@ -11,13 +11,10 @@ class Menu extends React.Component {
     return (
       <div className="ui pointing menu">
         <a style={ this.itemStyle } className="item active">
-          En espera
+          Active
         </a>
         <a style={ this.itemStyle } className="item">
-          Atendidos
-        </a>
-        <a style={ this.itemStyle } className="item">
-          Rechazados
+          Completed
         </a>
       </div>
     );

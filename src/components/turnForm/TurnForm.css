@@ -14,6 +14,6 @@
 }
 
 .new.card .content {
-  padding: 2em !important;
+  /* padding: 2em !important; */
   font-weight: bold !important;
 }

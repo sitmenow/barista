@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { turnsReducer } from './components/turnsList/reducer';
+import { turnsReducer } from './components/turnsDashboard/reducer';
 
 
 const app = {

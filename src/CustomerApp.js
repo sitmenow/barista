@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { } from './actions';
 // Components
 import BranchesDashboard from './components/branchesDashboard/BranchesDashboard';
-import CustomerTurnsDashboard from './components/turnsDashboard/CustomerTurnsDashboard';
+import TurnsDashboard from './components/turnsDashboard/connected';
 // Styles
 
 
@@ -29,7 +29,7 @@ class CustomerApp extends React.Component {
 
     return (
       <div className='seven wide column'>
-        { branch && <CustomerTurnsDashboard user={ user } customer={ customer } branch={ branch } /> }
+        { branch && <TurnsDashboard user={ user } customer={ customer } branch={ branch } /> }
         { !branch && <BranchesDashboard /> }
       </div>
     );

@@ -1,14 +1,9 @@
 import React from 'react';
 
-import TurnCard from '../turnCard/connected';
-import Menu from './Menu';
+import TurnCard from '../turnCard/ActiveCustomerTurnCard';
 
 
 class TurnsList extends React.Component {
-  componentDidMount () {
-    // setInterval(() => this.props.loadTurns(), 5000);
-  }
-
   state = {
     selectedTurnId: null,
   };
@@ -25,8 +20,7 @@ class TurnsList extends React.Component {
 
     return (
       <>
-      {/* <Menu /> */ }
-        <div className='ui divided fluid items card' style={{ margin: 0 }}>
+        <div className='ui divided fluid items' style={{ margin: 0 }}>
           <div style={{ padding: 0, border: 'none' }}></div>
           {
             turns.map((turn, index) => (
@@ -41,6 +35,7 @@ class TurnsList extends React.Component {
               />
             ))
           }
+          <div style={{ padding: 0, border: 'none' }}></div>
         </div>
       </>
     );

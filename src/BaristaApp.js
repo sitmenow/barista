@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { } from './actions';
 // Components
 import BranchesDashboard from './components/branchesDashboard/BranchesDashboard';
-import BaristaTurnsDashboard from './components/turnsDashboard/BaristaTurnsDashboard';
+import BaristaTurnsDashboard from './components/turnsDashboard/TurnsDashboard';
 // Styles
 
 
