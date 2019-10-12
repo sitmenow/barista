@@ -19,6 +19,7 @@ class TurnsDashboard extends React.Component {
         this.props.turns, this.props.branch
       ),
     };
+    console.log(this.props, this.state);
   }
 
   filterTurnsByBranch = (turns, branch) => {
@@ -70,7 +71,7 @@ class TurnsDashboard extends React.Component {
         { branch && <BranchHeader { ...branch } showTurnForm={ () => this.showTurnForm() } /> }
         <Menu handleActiveOnClick={ () => this.getActiveTurns() } handleCompletedOnClick={ () => this.getCompletedTurns() } />
         { this.state.showTurnForm && <TurnForm user={ user } hideTurnForm={ () => this.hideTurnForm() }/> }
-        <TurnsList user={ role } turns={ this.state.turns } />
+        <TurnsList user={ role } turns={ this.props.turns } />
       </div>
     );
   }

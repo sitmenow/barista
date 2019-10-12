@@ -26,8 +26,7 @@ class Branch {
   }
 
   createTurn(turn, role = '') {
-    console.log(turn);
-    const path = this._buildCreateTurn(role);
+    const path = this._buildUpdateTurn(role);
     return this._requester.post(path, turn)
       .then(response => new Turn(response, this._requester));
   }

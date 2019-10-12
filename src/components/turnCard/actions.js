@@ -2,10 +2,38 @@ import API from '../../api';
 import User from '../../api/user';
 import Branch from '../../api/branch';
 import Brand from '../../api/brand';
+import Turn from '../../api/turn';
 import { actions } from './reducer'
 
 
 const api = new API().getInstance();
+
+export const cancelTurn = (turn) =>
+  async (dispatch: Function, getState: Function) => {
+    const branch = getState().app.selectedBranch;
+    const apiBrand = new Brand(branch.brand, api.requester);
+    const apiBranch = new Branch(
+      Object.assign({}, branch, { brand: apiBrand }),
+      api.requester
+    );
+    const apiTurn = new Turn(
+      Object.assign({}, turn, { branch }),
+      api.requester,
+    );
+
+    dispatch({ type: actions.START_LOAD });
+
+    apiTurn
+      .cancel()
+      .then((canceledTurn) => {
+        dispatch({ type: actions.REMOVE_CUSTOMER_TURN, turn });
+        dispatch({ type: actions.END_LOAD });
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatch({ type: actions.END_LOAD });
+      });
+  }
 
 export const serveTurn = (turnId) =>
   async (dispatch: Function, getState: Function) => {

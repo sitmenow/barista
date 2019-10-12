@@ -56,6 +56,7 @@ const actions = {
   UPDATE_USER_STATUS: 'UPDATE_USER_STATUS',
   UPDATE_USER_ROLE: 'UPDATE_USER_ROLE',
   ADD_CUSTOMER_TURN: 'ADD_CUSTOMER_TURN',
+  REMOVE_CUSTOMER_TURN: 'REMOVE_CUSTOMER_TURN',
 
   // Customer
   SET_CUSTOMER_TURNS: 'SET_CUSTOMER_TURNS',
@@ -137,6 +138,23 @@ function userReducer(state=user, action) {
       // TODO: Clean turns
       state.roles.customer.turns = state.roles.customer.turns.map(turn => Object.assign({}, turn));
       state.roles.customer.turns.push(turn);
+      console.log(state);
+      return state;
+    case actions.REMOVE_CUSTOMER_TURN:
+      var { turn } = action;
+      // TODO: Clean turns
+      console.log(turn);
+      const turns = state.roles.customer.turns.reduce((result, t) => {
+        if (t.id != turn.id) {
+          console.log(t);
+          result.push(Object.assign({}, t));
+        }
+
+        return result;
+      }, []);
+      console.log(turns);
+      Object.assign(state.roles.customer, { turns });
+      return state;
     default:
       return state;
   }

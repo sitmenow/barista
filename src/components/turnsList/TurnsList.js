@@ -10,7 +10,11 @@ class TurnsList extends React.Component {
 
   handleTurnSelection = (isUserPreparing) => (turnId) => {
     if (!isUserPreparing) {
-      this.setState({ selectedTurnId: turnId });
+      if (this.state.selectedTurnId == turnId) {
+        this.setState({ selectedTurnId: null });
+      } else {
+        this.setState({ selectedTurnId: turnId });
+      }
     }
   }
 

@@ -17,7 +17,6 @@ const mapStateToTurnsDashboardProps = (state, props) => {
   let role;
   let allowManagement;
 
-  console.log(props);
   const { user, barista, customer, branch } = props;
 
   if (barista) {

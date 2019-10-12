@@ -32,6 +32,12 @@ class Turn {
     const response = await this._requester.put(path);
   }
 
+  cancel () {
+    const path = this._buildCancelTurnPath();
+    return this._requester.put(path)
+      .then(response => new Turn(response, this._requester));
+  }
+
   _buildServeTurnPath() {
     return `/brands/${this.branch.brand.id}/branches/${this.branch.id}/turns/${this.id}/serve`;
   }
@@ -47,6 +53,11 @@ class Turn {
   _buildUnprepareTurnPath() {
     return `/brands/${this.branch.brand.id}/branches/${this.branch.id}/turns/${this.id}/unprepare`;
   }
+
+  _buildCancelTurnPath() {
+    return `/brands/${this.branch.brand.id}/branches/${this.branch.id}/turns/${this.id}/cancel`;
+  }
+
 }
 
 export default Turn;
