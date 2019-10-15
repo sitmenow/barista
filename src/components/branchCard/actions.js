@@ -1,11 +1,10 @@
-import API from '../../api';
 import { actions } from './reducer'
 
 
-const api = new API().getInstance();
-
 export const selectBranch = (branchId) =>
   async (dispatch: Function, getState: Function) => {
+
+    // TODO: Call API to get branch OR get it as parameter
     const branch = {
       id: branchId,
       name: 'Wizeline',
@@ -16,6 +15,6 @@ export const selectBranch = (branchId) =>
       },
     };
 
-    dispatch({ type: actions.UPDATE_SELECTED_BRANCH , branch });
+    dispatch({ type: actions.UPDATE_SELECTED_BRANCH, branch });
   };
 

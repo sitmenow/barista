@@ -1,11 +1,11 @@
 import API from '../../api';
+import User from '../../api/user';
 import { actions } from './reducer'
-import { actions as globalActions } from '../../reducer';
 
 
 const api = new API().getInstance();
 
-export const loadBranchTurns = () =>
+export const loadBranchActiveTurns = () =>
   async (dispatch: Function, getState: Function) => {
     const { barista } = getState();
     const { branch } = barista;
@@ -17,7 +17,7 @@ export const loadBranchTurns = () =>
       _brand: brandResource,
     });
 
-    dispatch({ type: globalActions.START_LOAD });
+    dispatch({ type: actions.START_LOAD });
 
     try {
       const turns = await branchResource.turns();
@@ -26,31 +26,27 @@ export const loadBranchTurns = () =>
       console.log('error loading turns')
     }
 
-    dispatch({ type: globalActions.END_LOAD });
+    dispatch({ type: actions.END_LOAD });
+
+    return;
   }
 
-export const loadCustomerTurns = () =>
+export const loadCustomerActiveTurns = () =>
   async (dispatch: Function, getState: Function) => {
-    const { barista } = getState();
-    const { branch } = barista;
-    const { brand } = branch;
+    const user = getState().user;
 
-    const brandResource = api.brand({ _id: brand.id });
-    const branchResource = brandResource.branch({
-      _id: branch.id,
-      _brand: brandResource,
-    });
+    const apiUser = new User(user, api.requester);
 
-    dispatch({ type: globalActions.START_LOAD });
-
-    try {
-      const turns = await branchResource.turns();
-      dispatch({ type: actions.SET_TURNS, turns });
-    } catch (error) {
-      console.log('error loading turns')
-    }
-
-    dispatch({ type: globalActions.END_LOAD });
+    apiUser
+      .getTurns()
+      .then((turns) => {
+        dispatch({ type: actions.SET_CUSTOMER_ACTIVE_TURNS, turns });
+        dispatch({ type: actions.END_LOAD });
+      })
+      .catch ((error) => {
+        console.log('error loading turns');
+        dispatch({ type: actions.END_LOAD });
+      });
   }
 
 export const addCustomerTurn = () =>

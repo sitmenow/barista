@@ -14,17 +14,13 @@ class TurnsDashboard extends React.Component {
     super(props);
 
     this.state = {
-      showTurnForm: false,
-      turns: this.filterTurnsByBranch(
-        this.props.turns, this.props.branch
-      ),
+      isTurnFormEnabled: false,
+      isActiveTurnsListEnabled: true,
+      isCompletedTurnsListEnabled: false,
     };
-    console.log(this.props, this.state);
   }
 
-  filterTurnsByBranch = (turns, branch) => {
-    if (!branch) return turns;
-
+  filterTurnsByBranch = (turns = [], branch) => {
     return turns.reduce((result, turn) => {
       if (turn.branch.id == branch.id) {
         result.push(turn);
@@ -33,45 +29,93 @@ class TurnsDashboard extends React.Component {
     }, []);
   };
 
-  // Returns stored turns for each role
-  getActiveTurns = () => {
+  enableActiveTurnsList = () => {
+    this.props.loadActiveTurns();
+
     this.setState({
-      turns: this.filterTurnsByBranch(
-        this.props.turns, this.props.branch
-      ),
+      isActiveTurnsListEnabled: true,
+      isCompletedTurnsListEnabled: false,
     });
   };
 
-  // Returns fetched turns that are completed
-  // We do not need to store this turns for now.
-  getCompletedTurns = () => {
-    this.props.loadTurns((turns) => {
-      this.setState({ turns });
+  enableCompletedTurnsList = () => {
+    this.props.loadCompletedTurns();
+
+    this.setState({
+      isActiveTurnsListEnabled: false,
+      isCompletedTurnsListEnabled: true,
     });
   };
 
-  showTurnForm = () => {
+  enableTurnForm = () => {
     this.setState({
-      showTurnForm: true,
+      isTurnFormEnabled: true,
     });
   };
 
-  hideTurnForm = () => {
+  disableTurnForm = () => {
     this.setState({
-      showTurnForm: false,
+      isTurnFormEnabled: false,
     });
   };
 
 
   render() {
-    const { user, role, branch } = this.props;
+    const { user, role, branch, allowManagement } = this.props;
+    let activeTurns = this.props.activeTurns;
+    let completedTurns = this.props.completedTurns;
+    let listType = 'customer';
+
+    if (branch) {
+      activeTurns = this.filterTurnsByBranch(this.props.activeTurns, branch)
+      completedTurns = this.filterTurnsByBranch(this.props.completedTurns, branch);
+    }
+
+    if (allowManagement) {
+      listType = 'branch';
+    }
 
     return (
       <div className='column'>
-        { branch && <BranchHeader { ...branch } showTurnForm={ () => this.showTurnForm() } /> }
-        <Menu handleActiveOnClick={ () => this.getActiveTurns() } handleCompletedOnClick={ () => this.getCompletedTurns() } />
-        { this.state.showTurnForm && <TurnForm user={ user } hideTurnForm={ () => this.hideTurnForm() }/> }
-        <TurnsList user={ role } turns={ this.props.turns } />
+        {
+          branch &&
+            <BranchHeader
+              { ...branch }
+              createTurnButtonOnClick={ () => this.enableTurnForm() }
+            />
+        }
+        <Menu
+          activeTurnsButtonOnClick={ () => this.enableActiveTurnsList() }
+          completedTurnsButtonOnClick={ () => this.enableCompletedTurnsList() }
+          isActiveTurnsListEnabled={ this.state.isActiveTurnsListEnabled }
+          isCompletedTurnsListEnabled={ this.state.isCompletedTurnsListEnabled }
+        />
+        {
+          this.state.isTurnFormEnabled &&
+            <TurnForm
+              user={ user }
+              cancelButtonOnClick={ () => this.disableTurnForm() }
+            /> 
+        }
+
+        {/* TODO: Show loader when app is in loading state */}
+        {
+          this.state.isActiveTurnsListEnabled &&
+            <TurnsList
+              user={ role }
+              turns={ activeTurns }
+              type={ 'active-' + listType }
+              allowManagement={ allowManagement }
+            />
+        }
+        {
+          this.state.isCompletedTurnsListEnabled &&
+            <TurnsList
+              user={ role }
+              turns={ completedTurns }
+              type={ 'detailed-' + listType }
+            />
+        }
       </div>
     );
   }

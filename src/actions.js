@@ -60,7 +60,7 @@ export const syncUserTurns = () =>
 
     apiUser
       .getTurns()
-      .then(turns => dispatch({ type: actions.SET_CUSTOMER_TURNS, turns }))
+      .then(turns => dispatch({ type: actions.SET_CUSTOMER_ACTIVE_TURNS, turns }))
       .catch();
   };
 
@@ -87,7 +87,6 @@ export const syncUser = () =>
             .catch(error => Promise.reject(error));
         })
         .then((stored) => {
-          console.log(stored);
           dispatch({
             type: actions.SET_USER,
             user: {

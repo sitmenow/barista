@@ -2,9 +2,10 @@ import React from 'react';
 
 import { dateToString } from '../../helpers/datetime'
 
+
 class BranchHeader extends React.Component {
   state = {
-    showMenu: false,
+    isMenuEnabled: false,
   };
 
   leftLabelStyle = {
@@ -24,7 +25,7 @@ class BranchHeader extends React.Component {
     borderBottomLeftRadius: 0,
   };
 
-  handleDropdownChange = () => {
+  enableMenu = () => {
     this.setState({
       showMenu: !this.state.showMenu,
     })
@@ -45,10 +46,10 @@ class BranchHeader extends React.Component {
       <>
         <div className='ui fluid card'>
           <div className="content">
-            <div className="ui right floated dropdown" onClick={ () => this.handleDropdownChange() }>
+            <div className="ui right floated dropdown" onClick={ () => this.enableMenu() }>
               <i className="caret down icon"></i>
               <div className={ this.getDropdownClass() }>
-                <div className="item" onClick={ () => this.props.showTurnForm() }>New Turn</div>
+                <div className="item" onClick={ this.props.createTurnButtonOnClick }>New Turn</div>
               </div>
             </div>
             <div className='left floated tiny ui image' style={{ marginBottom: 0 }}>
@@ -61,7 +62,7 @@ class BranchHeader extends React.Component {
                 Open
               </div>
               <div className="ui label" style={ this.rightLabelStyle }>
-                8 min
+                X min
               </div>
             </div>
 

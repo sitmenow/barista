@@ -24,10 +24,6 @@ class TurnForm extends React.Component {
     };
   }
 
-  handleFormDestruction = () => {
-    this.props.hideTurnForm();
-  };
-
   handleFormChange = ({ name, company, product }) => {
     if (name !== undefined) {
       const turn = Object.assign(this.state.turn, { name });
@@ -49,6 +45,7 @@ class TurnForm extends React.Component {
     e.preventDefault();
 
     this.props.createTurnAsCustomer(this.state.turn);
+    this.props.cancelButtonOnClick();
   };
 
 
@@ -107,7 +104,7 @@ class TurnForm extends React.Component {
             </div>
 
             <button className="ui primary right floated button" tabIndex="0" onClick={ (e) => this.handleFormSubmit(e) } >Confirm</button>
-            <button className="ui left floated button" tabIndex="1" onClick={ () => this.handleFormDestruction() } >Cancel</button>
+            <button className="ui left floated button" tabIndex="1" onClick={ this.props.cancelButtonOnClick } >Cancel</button>
           </form>
 
         </div>

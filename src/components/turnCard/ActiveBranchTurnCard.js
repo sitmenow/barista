@@ -60,7 +60,6 @@ class ActiveCustomerTurnCard extends React.Component {
     position: 'absolute',
     width: '120%',
     top: '30%',
-    zIndex: 0,
   };
 
   render() {

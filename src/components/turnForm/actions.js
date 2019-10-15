@@ -21,7 +21,7 @@ export const createTurnAsCustomer = (turn) =>
     apiBranch
       .createTurn(turn)
       .then((createdTurn) => {
-        dispatch({ type: actions.ADD_CUSTOMER_TURN, turn: createdTurn });
+        dispatch({ type: actions.ADD_CUSTOMER_ACTIVE_TURN, turn: createdTurn });
         dispatch({ type: actions.END_LOAD });
       })
       .catch((error) => {

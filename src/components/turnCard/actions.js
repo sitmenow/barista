@@ -26,7 +26,8 @@ export const cancelTurn = (turn) =>
     apiTurn
       .cancel()
       .then((canceledTurn) => {
-        dispatch({ type: actions.REMOVE_CUSTOMER_TURN, turn });
+        // TODO: use canceled turn for the dispatch action
+        dispatch({ type: actions.REMOVE_CUSTOMER_ACTIVE_TURN, turn });
         dispatch({ type: actions.END_LOAD });
       })
       .catch((error) => {

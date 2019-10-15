@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 
 import TurnsDashboard from './TurnsDashboard';
 import {
-  loadBranchTurns,
-  loadCustomerTurns,
+  loadBranchActiveTurns,
+  loadCustomerActiveTurns,
   addBranchTurn,
   addCustomerTurn,
   removeBranchTurn,
@@ -13,7 +13,8 @@ import {
 
 
 const mapStateToTurnsDashboardProps = (state, props) => {
-  let turns;
+  let activeTurns;
+  let completedTurns;
   let role;
   let allowManagement;
 
@@ -21,39 +22,39 @@ const mapStateToTurnsDashboardProps = (state, props) => {
 
   if (barista) {
     role = barista;
-    turns = barista.branch.turns;
+    activeTurns = barista.branch.turns.active;
+    completedTurns = barista.branch.turns.completed;
     allowManagement = true;
   }
 
   if (customer) {
     role = customer;
-    turns = customer.turns;
+    activeTurns = customer.turns.active;
+    completedTurns = customer.turns.completed;
     allowManagement = false;
   }
 
-  return { turns, user, role, allowManagement, branch };
+  return { activeTurns, completedTurns, user, role, allowManagement, branch };
 };
 
 const mapDispatchToTurnsDashboardProps = (dispatch, props) => {
-  let loadTurns;
-  let addTurn;
-  let removeTurn;
+  let loadActiveTurns;
+  let loadCompletedTurns;
 
   const { barista, customer } = props;
 
   if (barista) {
-    loadTurns = loadBranchTurns;
-    addTurn = addBranchTurn;
-    removeTurn = removeBranchTurn;
+    loadActiveTurns = loadBranchActiveTurns;
+    loadCompletedTurns = () => async () => {};
   }
 
   if (customer) {
-    loadTurns = loadCustomerTurns;
-    addTurn = addCustomerTurn;
-    removeTurn = removeCustomerTurn;
+    loadActiveTurns = loadCustomerActiveTurns;
+    loadCompletedTurns = () => async () => {};
   }
 
-  return bindActionCreators({ loadTurns, addTurn, removeTurn }, dispatch);
+  return bindActionCreators({ loadActiveTurns, loadCompletedTurns }, dispatch
+  );
 };
 
 const mergeTurnsDashboardProps = (stateProps, dispatchProps, ownProps) => (

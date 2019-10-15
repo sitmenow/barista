@@ -12,7 +12,10 @@ const app = {
 
 const customer = {
   status: {},
-  turns: [],
+  turns: {
+    active: [],
+    completed: [],
+  },
 };
 
 const barista = {
@@ -24,7 +27,10 @@ const barista = {
     name: null,
     logo: null,
     lastOpeningTime: null,
-    turns: [],
+    turns: {
+      active: [],
+      completed: [],
+    },
     brand: {
       id: null,
       name: null,
@@ -55,11 +61,12 @@ const actions = {
   UPDATE_USER: 'UPDATE_USER',
   UPDATE_USER_STATUS: 'UPDATE_USER_STATUS',
   UPDATE_USER_ROLE: 'UPDATE_USER_ROLE',
-  ADD_CUSTOMER_TURN: 'ADD_CUSTOMER_TURN',
-  REMOVE_CUSTOMER_TURN: 'REMOVE_CUSTOMER_TURN',
+
 
   // Customer
-  SET_CUSTOMER_TURNS: 'SET_CUSTOMER_TURNS',
+  SET_CUSTOMER_ACTIVE_TURNS: 'SET_CUSTOMER_ACTIVE_TURNS',
+  ADD_CUSTOMER_ACTIVE_TURN: 'ADD_CUSTOMER_ACTIVE_TURN',
+  REMOVE_CUSTOMER_ACTIVE_TURN: 'REMOVE_CUSTOMER_ACTIVE_TURN',
 
   // Barista
   LOCK_BARISTA: 'LOCK_BARISTA',
@@ -108,7 +115,7 @@ function userReducer(state=user, action) {
   switch(action.type) {
     case actions.SET_USER:
       var { id, name, email, picture } = action.user;
-      return Object.assign({}, { id, name, email, picture, roles: {} });
+      return Object.assign({}, { id, name, email, picture, roles: { customer } });
     case actions.UPDATE_USER:
       var { id, name, email, picture } = action.user;
       return Object.assign({}, state, { id, name, email, picture });
@@ -127,33 +134,28 @@ function userReducer(state=user, action) {
           return Object.assign({}, state, { admin });
           break;
       }
-    case actions.SET_CUSTOMER_TURNS:
-      var { turns } = action;
+    case actions.SET_CUSTOMER_ACTIVE_TURNS:
+      const active = action.turns;
       // TODO: Clean turns
-      state.roles.customer = Object.assign({}, state.roles.customer, { turns });
+      state.roles.customer.turns = Object.assign({}, state.roles.customer.turns, { active });
       return state;
 
-    case actions.ADD_CUSTOMER_TURN:
-      var { turn } = action;
+    case actions.ADD_CUSTOMER_ACTIVE_TURN:
       // TODO: Clean turns
-      state.roles.customer.turns = state.roles.customer.turns.map(turn => Object.assign({}, turn));
-      state.roles.customer.turns.push(turn);
-      console.log(state);
+      state.roles.customer.turns.active = state.roles.customer.turns.active.map(
+        turn => Object.assign({}, turn)
+      );
+      state.roles.customer.turns.active.push(action.turn);
       return state;
-    case actions.REMOVE_CUSTOMER_TURN:
-      var { turn } = action;
+    case actions.REMOVE_CUSTOMER_ACTIVE_TURN:
       // TODO: Clean turns
-      console.log(turn);
-      const turns = state.roles.customer.turns.reduce((result, t) => {
-        if (t.id != turn.id) {
-          console.log(t);
-          result.push(Object.assign({}, t));
+      state.roles.customer.turns.active = state.roles.customer.turns.active.reduce((turns, turn) => {
+        if (turn.id != action.turn.id) {
+          turns.push(Object.assign({}, turn));
         }
 
-        return result;
+        return turns;
       }, []);
-      console.log(turns);
-      Object.assign(state.roles.customer, { turns });
       return state;
     default:
       return state;

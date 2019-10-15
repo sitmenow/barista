@@ -8,12 +8,23 @@ import { login, logout, isUserAuthenticated, syncUser } from './actions';
 import AdminApp from './AdminApp';
 import BaristaApp from './BaristaApp';
 import CustomerApp from './CustomerApp';
-import Menu from './components/menu/Menu';
+import TurnsPage from './TurnsPage';
+import Menu from './components/menu/connected';
 // Styles
 import './semantic/dist/semantic.css';
 
 
-const mapStateToAppProps = (state, props) => props;
+const mapStateToAppProps = (state, props) => {
+  const isCustomerPathEnabled = !!state.user.roles.customer;
+  const isBaristaPathEnabled = !!state.user.roles.barista;
+  const isAdminPathEnabled = false;
+
+  return Object.assign(
+    {},
+    props,
+    { isCustomerPathEnabled, isBaristaPathEnabled, isAdminPathEnabled }
+  );
+};
 
 const mapDispatchToAppProps = (dispatch) =>
   bindActionCreators({ login, logout, isUserAuthenticated, syncUser }, dispatch);
@@ -39,27 +50,32 @@ class App extends React.Component {
 
   render() {
     return (
-      <>
-        <div className='ui relaxed grid container' style={ this.containerStyle }>
+      <div className='ui relaxed grid container' style={ this.containerStyle }>
+        <Router>
           <Menu />
 
-          <Router>
-            {/* Admin */}
-            <Route exact={true} path="/admin" render={(props) => (<AdminApp {...props} />)}/>
+          {/* Admin */}
+          { this.props.isAdminPathEnabled &&
+            <Route exact={true} path="/admin" render={ (props) => (<AdminApp {...props} />) }/>
+          }
 
-            {/* Barista */}
-            <Route exact={true} path="/barista" render={(props) => (<BaristaApp {...props} />)} />
+          {/* Barista */}
+          { this.props.isBaristaPathEnabled &&
+            <Route exact={true} path="/barista" render={ (props) => (<BaristaApp {...props} />) } />
+          }
 
-            {/* Customer */}
-            <Route exact={true} path="/" render={(props) => (
-              <CustomerApp {...props} />
-            )} />
-            <Route exact={true} path="/profile" render={() => (<span>CUSTOMER PROFILE</span>) }/>
-            <Route exact={true} path="/turns" render={() => (<span>CUSTOMER HISTORY OF TURNS</span>) }/>
-            <Route exact={true} path="/out" render={() => (this.props.logout()) }/>
-          </Router>
-        </div>
-      </>
+          {/* Customer */}
+          <Route exact={true} path="/" render={ (props) => (<CustomerApp {...props} />) } />
+
+          {/* Customer Active Turns */}
+          <Route exact={true} path="/turns" render={ (props) => (<TurnsPage {...props} />) }/>
+
+          <Route exact={true} path="/profile" render={() => (<span>CUSTOMER PROFILE</span>) }/>
+          <Route exact={true} path="/out" render={() => (this.props.logout()) }/>
+
+          {/* TODO: Create 404 page */}
+        </Router>
+      </div>
     );
   }
 }
