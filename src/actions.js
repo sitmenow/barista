@@ -110,3 +110,11 @@ export const isUserAuthenticated = () =>
   (dispatch: Function, getState: Function) => {
     return auth.isAuthenticated();
   };
+
+export const cleanSelectedBranch = () =>
+  async (dispatch: Function, getState: Function) => {
+    const branch = null;
+
+    dispatch({ type: actions.UPDATE_SELECTED_BRANCH, branch });
+  }
+

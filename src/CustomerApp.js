@@ -9,7 +9,7 @@ import TurnsDashboard from './components/turnsDashboard/connected';
 // Styles
 
 
-const mapStateToAppProps = (state, props) => {
+const mapStateToCustomerAppProps = (state, props) => {
   const customer = state.user.roles.customer;
   const branch = state.app.selectedBranch;
   const user = {
@@ -20,7 +20,7 @@ const mapStateToAppProps = (state, props) => {
   return Object.assign({}, props, { customer, branch, user });
 };
 
-const mapDispatchToAppProps = (dispatch) =>
+const mapDispatchToCustomerAppProps = (dispatch) =>
   bindActionCreators({ }, dispatch);
 
 class CustomerApp extends React.Component {
@@ -28,12 +28,23 @@ class CustomerApp extends React.Component {
     const { user, customer, branch } = this.props;
 
     return (
-      <div className='seven wide column'>
-        { branch && <TurnsDashboard user={ user } customer={ customer } branch={ branch } /> }
-        { !branch && <BranchesDashboard /> }
-      </div>
+      <>
+        {/* Decorates Menu */}
+        { React.cloneElement(this.props.children, { turns: customer.turns.active }) }
+
+        <div className='seven wide column'>
+          { this.props.menu.isProfileOptionSelected && <div> Profile </div> }
+          { this.props.menu.isTurnsOptionSelected && <TurnsDashboard user={ user } customer={ customer } /> }
+          { this.props.menu.isVenuesOptionSelected && branch && <TurnsDashboard user={ user } customer={ customer} branch={ branch } /> }
+          { this.props.menu.isVenuesOptionSelected && !branch && <BranchesDashboard /> }
+        </div>
+      </>
     );
   }
 }
 
-export default connect(mapStateToAppProps, mapDispatchToAppProps)(CustomerApp);
+
+export default connect(
+  mapStateToCustomerAppProps,
+  mapDispatchToCustomerAppProps
+)(CustomerApp);

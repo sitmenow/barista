@@ -1,14 +1,36 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 
 class Menu extends React.Component {
-  state = {
-    isTurnsOptionSelected: false,
-    isVenuesOptionSelected: true,
-  };
+  static ProfileOption = ({ isSelected, onClick }) => (
+    <a className={ Menu.getItemClass(isSelected) } onClick={ onClick } >
+      Profile
+    </a>
+  );
+
+  static VenuesOption = ({ isSelected, onClick }) => (
+    <a className={ Menu.getItemClass(isSelected) } onClick={ onClick } >
+      Venues
+    </a>
+  );
+
+  static OrganizationsOption = ({ isSelected, onClick }) => (
+    <a className={ Menu.getItemClass(isSelected) } onClick={ onClick } >
+      Organizations
+    </a>
+  );
+
+  static TurnsOption = ({ isSelected, onClick, turns }) => (
+    <a className={ Menu.getItemClass(isSelected) } onClick={ onClick } >
+      Turns
+      <div className="ui left pointing label" style={ Menu.getMenuPointingLabelStyle() }>
+        { turns.length && turns.length }
+      </div>
+    </a>
+  );
+
 
   topCardStyle = {
     backgroundColor: 'rgb(64, 60, 60)',
@@ -32,11 +54,11 @@ class Menu extends React.Component {
     marginTop: '6px',
   };
 
-  menuPointingLabelStyle = {
+  static getMenuPointingLabelStyle = () => ({
     background: 'rgb(64, 60, 60)',
-  };
+  });
 
-  getItemClass = (isActive) => {
+  static getItemClass = (isActive) => {
     let klass = 'item';
 
     if (isActive) {
@@ -45,22 +67,6 @@ class Menu extends React.Component {
 
     return klass;
   }
-
-  handleTurnsOptionSelection = () => {
-    this.setState({
-      isTurnsOptionSelected: true,
-      isVenuesOptionSelected: false,
-    });
-  };
-
-  handleVenuesOptionSelection = () => {
-    this.props.cleanSelectedBranch();
-
-    this.setState({
-      isTurnsOptionSelected: false,
-      isVenuesOptionSelected: true,
-    });
-  };
 
   render() {
     {/*
@@ -89,9 +95,8 @@ class Menu extends React.Component {
     */}
 
     return (
-      <div className='four wide column'>
+      <div className='four wide column menu'>
         <div className='column'>
-
           <div style={ this.topCardStyle } className='ui fluid card'>
             <div className="content">
               <div className="ui fluid dropdown item" style={{ textAlign: 'center' }}>
@@ -114,26 +119,38 @@ class Menu extends React.Component {
           </div>
 
           <div className="ui fluid vertical menu">
-            <Link to={'/'} className={ this.getItemClass(false) }>
-              Profile
-            </Link>
-            <Link to={'/turns'}
-                  className={ this.getItemClass(this.state.isTurnsOptionSelected) }
-                  onClick={ () => this.handleTurnsOptionSelection() }
-            >
-              Turns
-              { this.props.unreadNotifications &&
-                <div className="ui left pointing label" style={ this.menuPointingLabelStyle }>
-                  1
-                </div>
-              }
-            </Link>
-            <Link to={'/'}
-                  className={ this.getItemClass(this.state.isVenuesOptionSelected) }
-                  onClick={ () => this.handleVenuesOptionSelection() }
-            >
-              Venues
-            </Link>
+            {
+              this.props.profileOptionOnClick &&
+                <Menu.ProfileOption
+                  isSelected={ this.props.isProfileOptionSelected }
+                  onClick={ this.props.profileOptionOnClick }
+                />
+            }
+
+            {
+              this.props.organizationsOptionOnClick &&
+                <Menu.OrganizationsOption
+                  isSelected={ this.props.isOrganizationsOptionSelected }
+                  onClick={ this.props.organizationsOptionOnClick }
+                />
+            }
+
+            {
+              this.props.venuesOptionOnClick &&
+                <Menu.VenuesOption
+                  isSelected={ this.props.isVenuesOptionSelected }
+                  onClick={ this.props.venuesOptionOnClick }
+                />
+            }
+
+            {
+              this.props.turnsOptionOnClick &&
+                <Menu.TurnsOption
+                  isSelected={ this.props.isTurnsOptionSelected }
+                  onClick={ this.props.turnsOptionOnClick }
+                  turns={ this.props.turns }
+                />
+            }
 
             <div className="item">
               <div className="ui transparent icon input">

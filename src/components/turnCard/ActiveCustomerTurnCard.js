@@ -42,7 +42,7 @@ class ActiveCustomerTurnCard extends React.Component {
       cursor: 'pointer',
       display: 'block',
       padding: '1em 1em',
-      zIndex: '10',
+      zIndex: 100,
     };
 
     if (index === 0) {
@@ -68,8 +68,9 @@ class ActiveCustomerTurnCard extends React.Component {
       <div
         style={ this.turnStyle(this.props.open, this.props.index) }
         className='ui item'
+        onClick={ () => this.props.select(this.props.id) }
       >
-        <div className='ui content' onClick={ () => this.props.select(this.props.id) } >
+        <div className='ui content'>
           <div className='right floated'>
             <div style={this.timeStyle} className='meta'>
               {moment(this.props.requestedTime).startOf('minute').fromNow()}
@@ -90,7 +91,11 @@ class ActiveCustomerTurnCard extends React.Component {
 
         { this.props.open &&
         <div className="ui content" style={ this.bannerStyle }>
-          <button className="ui right floated negative tiny button" style={{ background: 'rgb(228, 58, 58)' }} onClick={ () => this.props.cancelTurn(this.props) }>
+          <button
+            className="ui right floated negative tiny button"
+            style={{ background: 'rgb(228, 58, 58)' }}
+            onClick={ () => this.props.cancelTurn(this.props) }
+          >
             Cancelar
           </button>
         </div>
