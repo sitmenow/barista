@@ -26,6 +26,7 @@ class User {
     return this._requester.get(path);
   }
 
+  // TODO: Rename this function to getActiveTurns
   getTurns() {
     const path = this._buildGetTurns();
     return this._requester.get(path)

@@ -6,7 +6,7 @@ import BranchCard from './BranchCard';
 import { selectBranch } from './actions';
 
 
-const mapStateToBranchCardProps = (state, props) => Object.assign({}, props);
+const mapStateToBranchCardProps = (state, props) => props;
 
 const mapDispatchToBranchCardProps = (dispatch) =>
   bindActionCreators({ selectBranch }, dispatch);

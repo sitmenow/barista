@@ -1,4 +1,5 @@
-import Auth from './auth/auth0';
+// import AuthFactory from './auth/factory';
+import Auth0 from './auth/auth0';
 import API from './api';
 import User from './api/user';
 import { actions } from './reducer';
@@ -14,7 +15,17 @@ new API({
 
 // Any unauthorized api call should dispatch a logout
 const api = new API().getInstance();
-const auth = new Auth({});
+
+// TODO: Handle error as setup error
+// const auth = AuthFactory.create(config.auth);
+const auth = new Auth0({
+  domain: 'sitmenow.auth0.com',
+  clientID: '2c3q1IpRx9mCO8Mjl7bD1Md7uQcJ2wZg',
+  redirectUri: 'http://localhost:3000/',
+  responseType: 'token id_token',
+  scope: 'openid profile read:turns',
+  audience: 'https://coffee-shop.sitmenow.com',
+});
 
 export const login = (hash, history) =>
   (dispatch: Function, getState: Function) => {
@@ -49,18 +60,6 @@ export const syncUserRoles = () =>
       .then((roles) =>
         roles.map(role => dispatch({ type: actions.UPDATE_USER_ROLE, role }))
       )
-      .catch();
-  };
-
-export const syncUserTurns = () =>
-  (dispatch: Function, getState: Function) => {
-    const user = getState().user;
-
-    const apiUser = new User(user, api.requester);
-
-    apiUser
-      .getTurns()
-      .then(turns => dispatch({ type: actions.SET_CUSTOMER_ACTIVE_TURNS, turns }))
       .catch();
   };
 
@@ -101,7 +100,6 @@ export const syncUser = () =>
           });
 
           syncUserRoles()(dispatch, getState);
-          syncUserTurns()(dispatch, getState);
         })
         .catch();
   };

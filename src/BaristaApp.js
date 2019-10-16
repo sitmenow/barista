@@ -4,33 +4,46 @@ import { connect } from 'react-redux';
 
 import { } from './actions';
 // Components
-import BranchesDashboard from './components/branchesDashboard/BranchesDashboard';
-import BaristaTurnsDashboard from './components/turnsDashboard/TurnsDashboard';
+import BranchesDashboard from './components/branchesDashboard/connected';
+import TurnsDashboard from './components/turnsDashboard/connected';
 // Styles
 
 
-const mapStateToAppProps = (state, props) => {
+const mapStateToBaristaAppProps = (state, props) => {
   const barista = state.user.roles.barista;
-  const branch = { id: state.app.selectedBranch };
+  const branch = state.app.selectedBranch;
+  const user = {
+    name: 'New User',
+    email: '',
+  };
 
-  return Object.assign({}, props, { barista, branch });
+  return Object.assign({}, props, { barista, branch, user });
 };
 
-const mapDispatchToAppProps = (dispatch) =>
+const mapDispatchToBaristaAppProps = (dispatch) =>
   bindActionCreators({ }, dispatch);
 
 class BaristaApp extends React.Component {
   render() {
-    const { barista, branch } = this.props;
+    const { user, barista, branch } = this.props;
 
     return (
-      <div className='seven wide column'>
-        branch && <BaristaTurnsDashboard barista={ barista } branch={ branch }/>
-        !branch && <BranchesDashboard barista={ barista } />
-      </div>
+      <>
+        {/* Decorates Menu */}
+        { React.cloneElement(this.props.children, { turns: barista.branch.turns.active }) }
+
+        <div className='seven wide column'>
+          { this.props.menu.isProfileOptionSelected && <div> Profile </div> }
+          { this.props.menu.isVenuesOptionSelected && !branch && <BranchesDashboard barista={ barista }/> }
+          { this.props.menu.isVenuesOptionSelected && branch && <TurnsDashboard user={ user } barista={ barista } branch={ branch }/> }
+        </div>
+      </>
     );
   }
 }
 
 
-export default connect(mapStateToAppProps, mapDispatchToAppProps)(BaristaApp);
+export default connect(
+  mapStateToBaristaAppProps,
+  mapDispatchToBaristaAppProps
+)(BaristaApp);

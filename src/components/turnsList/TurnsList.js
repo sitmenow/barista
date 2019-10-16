@@ -30,9 +30,9 @@ class TurnsList extends React.Component {
                 {
                   key: index,
                   index: index,
-                  open: this.state.selectedTurnId === turn.id,
-                  lock: user.status.preparing,
-                  select: this.handleTurnSelection(user.status.preparing),
+                  open: true, //this.state.selectedTurnId === turn.id,
+                  lock: user.status.isLocked,
+                  onClick: this.handleTurnSelection(user.status.isLocked),
                   type,
                   allowManagement,
                 },

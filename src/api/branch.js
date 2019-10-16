@@ -2,20 +2,21 @@ import Brand from './brand';
 import Turn from './turn';
 
 class Branch {
-  constructor({ id, name, lastOpeningTime, brand } = {}, requester) {
+  constructor({ id, name, lastOpeningTime, brand, picture } = {}, requester) {
     this.id = id;
     this.name = name;
     this.lastOpeningTime = lastOpeningTime;
     this.brand = brand;
+    this.picture = picture;
     this._requester = requester;
   }
 
   async getTurns() {
     const path = this._buildTurnsPath();
-    const response = await this._requester.get(path);
-
-    return response
-      .map(turn => new Turn(turn, this._requester));
+    return this._requester.get(path)
+      .then(response =>
+        response.map(turn => new Turn(turn, this._requester))
+      );
   }
 
   async getTurn(turnId) {
@@ -36,7 +37,7 @@ class Branch {
   async close() {}
 
   _buildTurnsPath() {
-    return `/brands/${this.brand.id}/branches/${this.id}/turns`;
+    return `/brands/${this.brand.id}/branches/${this.id}/turns`; // ?all=true
   }
 
   _buildTurnPath(turnId) {

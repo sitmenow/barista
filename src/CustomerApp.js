@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { } from './actions';
 // Components
-import BranchesDashboard from './components/branchesDashboard/BranchesDashboard';
+import BranchesDashboard from './components/branchesDashboard/connected';
 import TurnsDashboard from './components/turnsDashboard/connected';
 // Styles
 
@@ -35,8 +35,8 @@ class CustomerApp extends React.Component {
         <div className='seven wide column'>
           { this.props.menu.isProfileOptionSelected && <div> Profile </div> }
           { this.props.menu.isTurnsOptionSelected && <TurnsDashboard user={ user } customer={ customer } /> }
-          { this.props.menu.isVenuesOptionSelected && branch && <TurnsDashboard user={ user } customer={ customer} branch={ branch } /> }
-          { this.props.menu.isVenuesOptionSelected && !branch && <BranchesDashboard /> }
+          { this.props.menu.isVenuesOptionSelected && branch && <TurnsDashboard user={ user } customer={ customer } branch={ branch } /> }
+          { this.props.menu.isVenuesOptionSelected && !branch && <BranchesDashboard customer={ customer }/> }
         </div>
       </>
     );

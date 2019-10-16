@@ -38,23 +38,22 @@ const mapStateToTurnsDashboardProps = (state, props) => {
 };
 
 const mapDispatchToTurnsDashboardProps = (dispatch, props) => {
-  let loadActiveTurns;
-  let loadCompletedTurns;
+  let loadActiveTurns = () => async () => {};
+  let loadCompletedTurns = () => async () => {};
 
   const { barista, customer } = props;
 
   if (barista) {
     loadActiveTurns = loadBranchActiveTurns;
-    loadCompletedTurns = () => async () => {};
+    // loadCompletedTurns = () => async () => {};
   }
 
   if (customer) {
     loadActiveTurns = loadCustomerActiveTurns;
-    loadCompletedTurns = () => async () => {};
+    // loadCompletedTurns = () => async () => {};
   }
 
-  return bindActionCreators({ loadActiveTurns, loadCompletedTurns }, dispatch
-  );
+  return bindActionCreators({ loadActiveTurns, loadCompletedTurns }, dispatch);
 };
 
 const mergeTurnsDashboardProps = (stateProps, dispatchProps, ownProps) => (

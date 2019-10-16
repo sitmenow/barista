@@ -3,7 +3,8 @@ import React from 'react';
 import './TurnForm.css';
 
 
-const extractDomainFromEmailAddress = (emailAddress = '') => {
+const extractDomainFromEmailAddress = (emailAddress) => {
+  if (!emailAddress) emailAddress = '';
   const [id, domain] = emailAddress.split('@');
   if (!domain) return '';
   const [company] = domain.split('.');

@@ -1,5 +1,7 @@
 import API from '../../api';
 import User from '../../api/user';
+import Brand from '../../api/brand';
+import Branch from '../../api/branch';
 import { actions } from './reducer'
 
 
@@ -7,44 +9,40 @@ const api = new API().getInstance();
 
 export const loadBranchActiveTurns = () =>
   async (dispatch: Function, getState: Function) => {
-    const { barista } = getState();
-    const { branch } = barista;
-    const { brand } = branch;
-
-    const brandResource = api.brand({ _id: brand.id });
-    const branchResource = brandResource.branch({
-      _id: branch.id,
-      _brand: brandResource,
-    });
+    const branch = getState().app.selectedBranch;
+    const apiBrand = new Brand(branch.brand, api.requester);
+    const apiBranch = new Branch(
+      Object.assign({}, branch, { brand: apiBrand }),
+      api.requester
+    )
 
     dispatch({ type: actions.START_LOAD });
 
-    try {
-      const turns = await branchResource.turns();
-      dispatch({ type: actions.SET_TURNS, turns });
-    } catch (error) {
-      console.log('error loading turns')
-    }
-
-    dispatch({ type: actions.END_LOAD });
-
-    return;
-  }
+    return apiBranch
+      .getTurns()
+      .then((turns) => {
+        dispatch({ type: actions.SET_BARISTA_ACTIVE_TURNS, turns });
+        dispatch({ type: actions.END_LOAD });
+      })
+      .catch((error) => {
+        dispatch({ type: actions.END_LOAD });
+      });
+  };
 
 export const loadCustomerActiveTurns = () =>
   async (dispatch: Function, getState: Function) => {
     const user = getState().user;
-
     const apiUser = new User(user, api.requester);
 
-    apiUser
+    dispatch({ type: actions.START_LOAD });
+
+    return apiUser
       .getTurns()
       .then((turns) => {
         dispatch({ type: actions.SET_CUSTOMER_ACTIVE_TURNS, turns });
         dispatch({ type: actions.END_LOAD });
       })
       .catch ((error) => {
-        console.log('error loading turns');
         dispatch({ type: actions.END_LOAD });
       });
   }

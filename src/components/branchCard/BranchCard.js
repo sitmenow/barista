@@ -7,13 +7,9 @@ class BranchCard extends React.Component {
     cursor: 'pointer',
   };
 
-  selectBranch() {
-    this.props.selectBranch(this.props.id);
-  }
-
   render() {
     return (
-      <div className="card" style={ this.cardStyle } onClick={ () => this.selectBranch() }>
+      <div className="card" style={ this.cardStyle } onClick={ () => this.props.selectBranch(this.props) }>
         <div className="image">
           <img src={ this.props.picture } />
         </div>

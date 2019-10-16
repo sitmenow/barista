@@ -12,24 +12,28 @@ class Turn {
     this._requester = requester;
   }
 
-  async serve() {
+  serve() {
     const path = this._buildServeTurnPath();
-    const response = await this._requester.put(path);
+    return this._requester.put(path)
+      .then(response => new Turn(response, this._requester));
   }
 
-  async reject() {
+  reject() {
     const path = this._buildRejectTurnPath();
-    const response = await this._requester.put(path);
+    return this._requester.put(path)
+      .then(response => new Turn(response, this._requester));
   }
 
-  async prepare() {
+  prepare() {
     const path = this._buildPrepareTurnPath();
-    const response = await this._requester.put(path);
+    return this._requester.put(path)
+      .then(response => new Turn(response, this._requester));
   }
 
-  async unprepare() {
+  unprepare() {
     const path = this._buildUnprepareTurnPath();
-    const response = await this._requester.put(path);
+    return this._requester.put(path)
+      .then(response => new Turn(response, this._requester));
   }
 
   cancel () {

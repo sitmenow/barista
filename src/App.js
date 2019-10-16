@@ -117,7 +117,7 @@ class App extends React.Component {
     <BaristaApp {...props} menu={ this.state.menu } >
       <Menu
         {...this.state.menu}
-        profileOptionOnclick={ () => this.handleProfileOptionSelection() }
+        profileOptionOnClick={ () => this.handleProfileOptionSelection() }
         venuesOptionOnClick={ () => this.handleVenuesOptionSelection() }
       />
     </BaristaApp>
@@ -141,7 +141,7 @@ class App extends React.Component {
           { this.props.isAdminPathEnabled && <Route exact={ true } path="/admin" render={ this.renderAdminApp } /> }
           { this.props.isBaristaPathEnabled && <Route exact={ true } path="/barista" render={ this.renderBaristaApp } /> }
           <Route exact={ true } path="/logout" render={() => (this.props.logout()) }/>
-          <Route exact={ true } path="/" render={ this.renderCustomerApp } />
+          { this.props.isCustomerPathEnabled && <Route exact={ true } path="/" render={ this.renderCustomerApp } /> }
 
           {/* TODO: Create 404 page */}
         </Router>

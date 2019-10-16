@@ -4,19 +4,19 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import './ActiveCustomerTurnCard.css';
-import { cancelTurn } from './actions';
+import { prepareTurn, rejectTurn, serveTurn, unprepareTurn } from './actions';
 
 
-const mapStateToActiveCustomerTurnCardProps = (state, props) => props;
+const mapStateToActiveBranchTurnCardProps = (state, props) => props;
 
-const mapDispatchToActiveCustomerTurnCardProps = (dispatch, props) => {
+const mapDispatchToActiveBranchTurnCardProps = (dispatch, props) => {
   return bindActionCreators(
-    { cancelTurn },
+    { prepareTurn, rejectTurn, serveTurn, unprepareTurn },
     dispatch
   );
 };
 
-const mergeActiveCustomerTurnCardProps = (stateProps, dispatchProps, ownProps) => (
+const mergeActiveBranchTurnCardProps = (stateProps, dispatchProps, ownProps) => (
   {
     ...stateProps,
     ...dispatchProps,
@@ -24,7 +24,7 @@ const mergeActiveCustomerTurnCardProps = (stateProps, dispatchProps, ownProps) =
 );
 
 
-class ActiveCustomerTurnCard extends React.Component {
+class ActiveBranchTurnCard extends React.Component {
   timeStyle = {
     margin: 0,
     textAlign: 'right',
@@ -42,7 +42,7 @@ class ActiveCustomerTurnCard extends React.Component {
       cursor: 'pointer',
       display: 'block',
       padding: '1em 1em',
-      zIndex: '10',
+      zIndex: 100,
     };
 
     if (index === 0) {
@@ -58,8 +58,16 @@ class ActiveCustomerTurnCard extends React.Component {
 
   bannerStyle = {
     position: 'absolute',
-    width: '120%',
+    width: '118%',
     top: '30%',
+    zIndex: 0,
+  };
+
+  rightBannerStyle = {
+    position: 'absolute',
+    width: '140%',
+    top: '30%',
+    zIndex: 0,
   };
 
   render() {
@@ -67,8 +75,9 @@ class ActiveCustomerTurnCard extends React.Component {
       <div
         style={ this.turnStyle(this.props.open, this.props.index) }
         className='ui item'
+        onClick={ () => this.props.onClick(this.props.id) }
       >
-        <div className='ui content' onClick={ () => this.props.select(this.props.id) } >
+        <div className='ui content'>
           <div className='right floated'>
             <div style={this.timeStyle} className='meta'>
               {moment(this.props.requestedTime).startOf('minute').fromNow()}
@@ -87,10 +96,48 @@ class ActiveCustomerTurnCard extends React.Component {
           </div>
         </div>
 
-        { this.props.open &&
+        { this.props.open && !this.props.lock &&
         <div className="ui content" style={ this.bannerStyle }>
-          <button className="ui right floated negative tiny button" style={{ background: 'rgb(228, 58, 58)' }} onClick={ () => this.props.cancelTurn(this.props) }>
-            Cancelar
+          <button
+            className="ui right floated negative tiny button"
+            style={{ background: 'rgb(228, 58, 58)' }}
+            onClick={ () => this.props.rejectTurn(this.props) }
+          >
+            Reject
+          </button>
+        </div>
+        }
+
+        { this.props.open && !this.props.lock &&
+        <div className="ui content" style={ this.rightBannerStyle }>
+          <button
+            className="ui right floated primary tiny button"
+            onClick={ () => this.props.prepareTurn(this.props) }
+          >
+            Prepare
+          </button>
+        </div>
+        }
+
+        { this.props.open && this.props.lock &&
+        <div className="ui content" style={ this.rightBannerStyle }>
+          <button
+            className="ui right floated primary tiny button"
+            onClick={ () => this.props.prepareTurn(this.props) }
+          >
+            Serve
+          </button>
+        </div>
+        }
+
+        { this.props.open && this.props.lock &&
+        <div className="ui content" style={ this.bannerStyle }>
+          <button
+            className="ui right floated negative tiny button"
+            style={{ background: 'rgb(228, 58, 58)' }}
+            onClick={ () => this.props.unprepareTurn(this.props) }
+          >
+            Unprepare
           </button>
         </div>
         }
@@ -100,7 +147,7 @@ class ActiveCustomerTurnCard extends React.Component {
 }
 
 export default connect(
-  mapStateToActiveCustomerTurnCardProps,
-  mapDispatchToActiveCustomerTurnCardProps,
-  mergeActiveCustomerTurnCardProps,
-)(ActiveCustomerTurnCard);
+  mapStateToActiveBranchTurnCardProps,
+  mapDispatchToActiveBranchTurnCardProps,
+  mergeActiveBranchTurnCardProps,
+)(ActiveBranchTurnCard);

@@ -1,9 +1,10 @@
 import Branch from './branch';
 
 class Brand {
-  constructor({ id, name } = {}, requester) {
+  constructor({ id, name, picture } = {}, requester) {
     this.id = id;
     this.name = name;
+    this.picture = picture;
     this._requester = requester;
   }
 

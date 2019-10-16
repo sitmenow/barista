@@ -18,6 +18,10 @@ class TurnsDashboard extends React.Component {
       isActiveTurnsListEnabled: true,
       isCompletedTurnsListEnabled: false,
     };
+
+    // TODO: Find strategy to avoid loading every single time this
+    // gets initialized
+    this.props.loadActiveTurns();
   }
 
   filterTurnsByBranch = (turns = [], branch) => {

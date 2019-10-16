@@ -1,7 +1,10 @@
 import Requester from './requester';
 import Brand from './brand';
+import Branch from './branch';
 import User from './user';
 
+
+// TODO: Create factory for future different versions
 class API {
   constructor({ protocol, host, port, token, version }) {
     this._requester = new Requester({ protocol, host, port, token, version });
@@ -25,18 +28,30 @@ class API {
       .then(response => new User(response, this._requester));
   }
 
+  getBranches() {
+    const path = this._buildBranchesPath();
+    return this._requester.get(path)
+      .then(response =>
+        response.map((branch) => {
+          const brand = new Brand(branch.brand, this._requester);
+          Object.assign(branch, { brand });
+          return new Branch(branch, this._requester)
+        })
+      );
+  }
+
   getBrands() {
     const path = this._buildBrandsPath();
-    const response = this._requester.get(path);
-
-    return new Brand(response, this._requester);
+    return this._requester.get(path)
+      .then(response =>
+        response.map(brand => new Brand(brand, this._requester))
+      );
   }
 
   getBrand(brandId) {
     const path = this._buildBrandPath(brandId);
-    const response = this._requester.get(path);
-
-    return new Brand(response, this._requester);
+    return this._requester.get(path)
+      .then(response => new Brand(response, this._requester));
   }
 
   _buildBrandsPath() {
@@ -49,6 +64,10 @@ class API {
 
   _buildUserPath(userId) {
     return `/users/${userId}`;
+  }
+
+  _buildBranchesPath() {
+    return '/branches';
   }
 }
 

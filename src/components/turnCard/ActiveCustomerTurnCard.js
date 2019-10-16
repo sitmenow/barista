@@ -68,7 +68,7 @@ class ActiveCustomerTurnCard extends React.Component {
       <div
         style={ this.turnStyle(this.props.open, this.props.index) }
         className='ui item'
-        onClick={ () => this.props.select(this.props.id) }
+        onClick={ () => this.props.onClick(this.props.id) }
       >
         <div className='ui content'>
           <div className='right floated'>
@@ -96,7 +96,7 @@ class ActiveCustomerTurnCard extends React.Component {
             style={{ background: 'rgb(228, 58, 58)' }}
             onClick={ () => this.props.cancelTurn(this.props) }
           >
-            Cancelar
+            Cancel
           </button>
         </div>
         }

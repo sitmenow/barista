@@ -8,18 +8,23 @@ import { actions } from './reducer'
 
 const api = new API().getInstance();
 
+const createApiTurn = (getState, turn) => {
+  const branch = getState().app.selectedBranch;
+  const apiBrand = new Brand(branch.brand, api.requester);
+  const apiBranch = new Branch(
+    Object.assign({}, branch, { brand: apiBrand }),
+    api.requester
+  );
+
+  return new Turn(
+    Object.assign({}, turn, { branch }),
+    api.requester,
+  );
+}
+
 export const cancelTurn = (turn) =>
   async (dispatch: Function, getState: Function) => {
-    const branch = getState().app.selectedBranch;
-    const apiBrand = new Brand(branch.brand, api.requester);
-    const apiBranch = new Branch(
-      Object.assign({}, branch, { brand: apiBrand }),
-      api.requester
-    );
-    const apiTurn = new Turn(
-      Object.assign({}, turn, { branch }),
-      api.requester,
-    );
+    const apiTurn = createApiTurn(getState, turn);
 
     dispatch({ type: actions.START_LOAD });
 
@@ -36,105 +41,82 @@ export const cancelTurn = (turn) =>
       });
   }
 
-export const serveTurn = (turnId) =>
+export const serveTurn = (turn) =>
   async (dispatch: Function, getState: Function) => {
-    const { barista } = getState();
-
-    const apiBrand = api.createBrand(barista.branch.brand);
-    const apiBranch = apiBrand.createBranch(barista.branch);
-    const apiTurn = apiBranch.turn({
-      id: turnId, branch: apiBranch,
-    });
+    const apiTurn = createApiTurn(getState, turn);
 
     dispatch({ type: actions.START_LOAD });
 
-    try {
-      apiTurn.serve();
-      // dispatch({ type: actions.UPDATE_TURN /* , updatedTurn */ });
-      dispatch({ type: actions.REMOVE_TURN, turnId });
-      dispatch({ type: actions.UNLOCK_BARISTA });
-      // TODO: Show message of success
-    } catch(error) {
-      console.log('error serving turn');
-    }
-
-    dispatch({ type: actions.END_LOAD });
+    apiTurn
+      .serve()
+      .then((servedTurn) => {
+        // TODO: use canceled turn for the dispatch action
+        dispatch({ type: actions.REMOVE_BRANCH_ACTIVE_TURN, turn });
+        dispatch({ type: actions.UNLOCK_BARISTA });
+        dispatch({ type: actions.END_LOAD });
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatch({ type: actions.END_LOAD });
+      });
   }
 
-export const rejectTurn = (turnId) =>
+export const rejectTurn = (turn) =>
   async (dispatch: function, getState: function) => {
-    const { barista } = getState();
-
-    const apiBrand = api.createBrand(barista.branch.brand);
-    const apiBranch = apiBrand.createBranch(barista.branch);
-    const apiTurn = apiBranch.turn({
-      id: turnId, branch: apiBranch,
-    });
+    const apiTurn = createApiTurn(getState, turn);
 
     dispatch({ type: actions.START_LOAD });
 
-    try {
-      apiTurn.reject();
-      // dispatch({ type: actions.UPDATE_TURN /* , updatedTurn */ });
-      dispatch({ type: actions.REMOVE_TURN, turnId });
-      dispatch({ type: actions.UNLOCK_BARISTA });
-      // TODO: Show message of success
-    } catch(error) {
-      console.log('error rejecting turn');
-    }
-
-    dispatch({ type: actions.END_LOAD });
+    apiTurn
+      .reject()
+      .then((rejectedTurn) => {
+        // TODO: use canceled turn for the dispatch action
+        dispatch({ type: actions.REMOVE_BRANCH_ACTIVE_TURN, turn });
+        dispatch({ type: actions.END_LOAD });
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatch({ type: actions.END_LOAD });
+      });
   }
 
-export const prepareTurn = (turnId) =>
+export const prepareTurn = (turn) =>
   async (dispatch: function, getState: function) => {
-    // LOCK BARISTA && UPDATE_TURN (status: preparing)
-
-    const { barista } = getState();
-
-    const apiBrand = api.createBrand(barista.branch.brand);
-    const apiBranch = apiBrand.createBranch(barista.branch);
-    const apiTurn = apiBranch.turn({
-      id: turnId, branch: apiBranch,
-    });
+    const apiTurn = createApiTurn(getState, turn);
 
     dispatch({ type: actions.START_LOAD });
 
-    try {
-      apiTurn.prepare();
-      // dispatch({ type: actions.UPDATE_TURN /* , updatedTurn */ });
-      dispatch({ type: actions.LOCK_BARISTA });
-      // TODO: Show message of success
-    } catch(error) {
-      console.log('error preparing turn');
-    }
-
-    dispatch({ type: actions.END_LOAD });
+    apiTurn
+      .prepare()
+      .then((preparedTurn) => {
+        // TODO: use canceled turn for the dispatch action
+        // dispatch({ type: actions.UPDATE_BRANCH_ACTIVE_TURN, turn });
+        dispatch({ type: actions.LOCK_BARISTA });
+        dispatch({ type: actions.END_LOAD });
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatch({ type: actions.END_LOAD });
+      });
   }
 
-export const unprepareTurn = (turnId) =>
+export const unprepareTurn = (turn) =>
   async (dispatch: function, getState: function) => {
-    // UNLOCK BARISTA && UPDATE_TURN (status: waiting)
-
-    const { barista } = getState();
-
-    const apiBrand = api.createBrand(barista.branch.brand);
-    const apiBranch = apiBrand.createBranch(barista.branch);
-    const apiTurn = apiBranch.turn({
-      id: turnId, branch: apiBranch,
-    });
+    const apiTurn = createApiTurn(getState, turn);
 
     dispatch({ type: actions.START_LOAD });
 
-    try {
-      apiTurn.unprepare();
-      // dispatch({ type: actions.UPDATE_TURN /* , updatedTurn */ });
-      dispatch({ type: actions.UNLOCK_BARISTA });
-      // TODO: Show message of success
-    } catch(error) {
-      console.log('error preparing turn');
-    }
-
-    dispatch({ type: actions.END_LOAD });
+    apiTurn
+      .unprepare()
+      .then((unpreparedTurn) => {
+        // TODO: use canceled turn for the dispatch action
+        // dispatch({ type: actions.UPDATE_BRANCH_ACTIVE_TURN, turn });
+        dispatch({ type: actions.UNLOCK_BARISTA });
+        dispatch({ type: actions.END_LOAD });
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatch({ type: actions.END_LOAD });
+      });
   }
 

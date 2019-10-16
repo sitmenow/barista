@@ -12,9 +12,9 @@ export default class Auth0 extends Auth {
     this._auth0 = new auth0.WebAuth({
       domain: 'sitmenow.auth0.com',
       clientID: '2c3q1IpRx9mCO8Mjl7bD1Md7uQcJ2wZg',
-      redirectUri: 'http://localhost:3000/',
+      redirectUri: 'https://smn-barista.netlify.com',
       responseType: 'token id_token',
-      scope: 'openid profile read:turns',
+      scope: 'openid profile',
       audience: 'https://coffee-shop.sitmenow.com',
     });
 
@@ -22,7 +22,7 @@ export default class Auth0 extends Auth {
     this._accessToken = localStorage.getItem('accessToken', null);
     this._idToken = localStorage.getItem('idToken', null);
     this._expiresAt = localStorage.getItem('expiresAt', 0);
-    this._logoutRedirection = 'http://localhost:3000/';
+    this._logoutRedirection = 'https://smn-barista.netlify.com';
   }
 
   get accessToken() {

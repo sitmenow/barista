@@ -40,7 +40,7 @@ class Requester {
       'Content-Type': 'application/json',
     };
 
-    console.log('Request: ', url, headers, body);
+    console.debug('Request: ', url, headers, body);
 
     const request = new Request(
       url,
@@ -53,15 +53,14 @@ class Requester {
     return fetch(request)
       .then((response) => {
         if (response.status < 200 || response.status >= 300) {
-            console.log(response);
+            console.debug(response);
             return response.json()
               .then((body) => {
-                  console.log(body);
-                  throw new RequestError(response.status, body);
+                  throw new RequestError(response.status, JSON.stringify(body));
               });
         }
 
-        console.log(response)
+        console.debug(response)
         return response.json();
       })
       .then(response => console.debug(response) || response)

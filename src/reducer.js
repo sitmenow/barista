@@ -40,16 +40,14 @@ const barista = {
 
 const admin = {};
 
+const owner = {};
+
 const user = {
   id: null,
   name: null,
   email: null,
   picture: null,
-  roles: {
-    customer,
-    // barista: {},
-    // admin: {},
-  },
+  roles: {}, // Expected roles: customer, barista, owner & admin
   status: {
     authenticated: false,
   },
@@ -71,6 +69,9 @@ const actions = {
   // Barista
   LOCK_BARISTA: 'LOCK_BARISTA',
   UNLOCK_BARISTA: 'UNLOCK_BARISTA',
+  SET_BARISTA_ACTIVE_TURNS: 'SET_BARISTA_ACTIVE_TURNS',
+  ADD_BARISTA_ACTIVE_TURN: 'ADD_BARISTA_ACTIVE_TURN',
+  REMOVE_CUSTOMER_ACTIVE_TURN: 'REMOVE_CUSTOMER_ACTIVE_TURN',
 
   // App
   UPDATE_SELECTED_BRANCH: 'UPDATE_SELECTED_BRANCH',
@@ -124,21 +125,26 @@ function userReducer(state=user, action) {
     case actions.UPDATE_USER_ROLE:
       switch(action.role.type) {
         case 'customer':
-          state.roles = Object.assign({}, state.roles, { customer });
-          return state;
+          var roles = Object.assign({}, state.roles, { customer });
+          return Object.assign({}, state, { roles });
           break;
-        case 'barista':
-          return Object.assign({}, state, { barista });
+        case 'hostess':
+          var roles = Object.assign({}, state.roles, { barista });
+          return Object.assign({}, state, { roles });
           break;
         case 'admin':
-          return Object.assign({}, state, { admin });
+          state.roles = Object.assign({}, state.roles, { admin });
+          return state;
+          break;
+        case 'owner':
+          return Object.assign({}, state.roles, { owner });
           break;
       }
     case actions.SET_CUSTOMER_ACTIVE_TURNS:
-      const active = action.turns;
+      var active = action.turns;
       // TODO: Clean turns
       state.roles.customer.turns = Object.assign({}, state.roles.customer.turns, { active });
-      return state;
+      return Object.assign({}, state);
 
     case actions.ADD_CUSTOMER_ACTIVE_TURN:
       // TODO: Clean turns
@@ -146,7 +152,8 @@ function userReducer(state=user, action) {
         turn => Object.assign({}, turn)
       );
       state.roles.customer.turns.active.push(action.turn);
-      return state;
+      return Object.assign({}, state);
+
     case actions.REMOVE_CUSTOMER_ACTIVE_TURN:
       // TODO: Clean turns
       state.roles.customer.turns.active = state.roles.customer.turns.active.reduce((turns, turn) => {
@@ -156,7 +163,22 @@ function userReducer(state=user, action) {
 
         return turns;
       }, []);
-      return state;
+      return Object.assign({}, state);
+
+    case actions.SET_BARISTA_ACTIVE_TURNS:
+      var active = action.turns;
+      // TODO: Clean turns
+      state.roles.barista.branch.turns = Object.assign({}, state.roles.barista.branch.turns, { active });
+      return Object.assign({}, state);
+
+    case actions.LOCK_BARISTA:
+      state.roles.barista.status = Object.assign({}, state.roles.barista.status, { isLocked: true });
+      return Object.assign({}, state);
+
+    case actions.UNLOCK_BARISTA:
+      state.roles.barista.status = Object.assign({}, state.roles.barista.status, { isLocked: false });
+      return Object.assign({}, state);
+
     default:
       return state;
   }
