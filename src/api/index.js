@@ -1,9 +1,17 @@
 import Requester from './requester';
 import Brand from './brand';
+import Branch from './branch';
+import User from './user';
 
+
+// TODO: Create factory for future different versions
 class API {
   constructor({ protocol, host, port, token, version }) {
     this._requester = new Requester({ protocol, host, port, token, version });
+  }
+
+  get requester() {
+    return this._requester;
   }
 
   setToken(token) {
@@ -14,26 +22,36 @@ class API {
     this._requester.setToken(null);
   }
 
-  async getBrands() {
+  getUser(userId) {
+    const path = this._buildUserPath(userId);
+    return this._requester.get(path)
+      .then(response => new User(response, this._requester));
+  }
+
+  getBranches() {
+    const path = this._buildBranchesPath();
+    return this._requester.get(path)
+      .then(response =>
+        response.map((branch) => {
+          const brand = new Brand(branch.brand, this._requester);
+          Object.assign(branch, { brand });
+          return new Branch(branch, this._requester)
+        })
+      );
+  }
+
+  getBrands() {
     const path = this._buildBrandsPath();
-    const response = await this._requester.get(path);
-
-    return new Brand(response, this._requester);
+    return this._requester.get(path)
+      .then(response =>
+        response.map(brand => new Brand(brand, this._requester))
+      );
   }
 
-  async getBrand(brandId) {
+  getBrand(brandId) {
     const path = this._buildBrandPath(brandId);
-    const response = await this._requester.get(path);
-
-    return new Brand(response, this._requester);
-  }
-
-  brand(params) {
-    return new Brand(params, this._requester);
-  }
-
-  async getUser() {
-    return;
+    return this._requester.get(path)
+      .then(response => new Brand(response, this._requester));
   }
 
   _buildBrandsPath() {
@@ -42,6 +60,14 @@ class API {
 
   _buildBrandPath(brandId) {
     return `/brands/${brandId}`
+  }
+
+  _buildUserPath(userId) {
+    return `/users/${userId}`;
+  }
+
+  _buildBranchesPath() {
+    return '/branches';
   }
 }
 

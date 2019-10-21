@@ -1,21 +1,20 @@
 import { combineReducers } from 'redux';
 
-import { turnsReducer } from './components/turns/reducer';
+import { turnsReducer } from './components/turnsDashboard/reducer';
 
 
 const app = {
   status: {
     loading: false,
   },
+  selectedBranch: null,
 };
 
-const user = {
-  id: null,
-  apiToken: null, // :thinking_face:
-  name: '',
-  roles: new Set(['customer']),
-  status: {
-    authenticated: false,
+const customer = {
+  status: {},
+  turns: {
+    active: [],
+    completed: [],
   },
 };
 
@@ -28,6 +27,10 @@ const barista = {
     name: null,
     logo: null,
     lastOpeningTime: null,
+    turns: {
+      active: [],
+      completed: [],
+    },
     brand: {
       id: null,
       name: null,
@@ -35,24 +38,47 @@ const barista = {
   },
 };
 
-const customer = {
-  status: {},
+const admin = {};
+
+const owner = {};
+
+const user = {
+  id: null,
+  name: null,
+  email: null,
+  picture: null,
+  roles: {}, // Expected roles: customer, barista, owner & admin
+  status: {
+    authenticated: false,
+  },
 };
 
 const actions = {
+  // User
+  SET_USER: 'SET_USER',
   UPDATE_USER: 'UPDATE_USER',
-  UPDATE_CUSTOMER: 'UPDATE_CUSTOMER',
-  UPDATE_BARISTA: 'UPDATE_BARISTA',
+  UPDATE_USER_STATUS: 'UPDATE_USER_STATUS',
+  UPDATE_USER_ROLE: 'UPDATE_USER_ROLE',
+
+
+  // Customer
+  SET_CUSTOMER_ACTIVE_TURNS: 'SET_CUSTOMER_ACTIVE_TURNS',
+  ADD_CUSTOMER_ACTIVE_TURN: 'ADD_CUSTOMER_ACTIVE_TURN',
+  REMOVE_CUSTOMER_ACTIVE_TURN: 'REMOVE_CUSTOMER_ACTIVE_TURN',
+
+  // Barista
   LOCK_BARISTA: 'LOCK_BARISTA',
   UNLOCK_BARISTA: 'UNLOCK_BARISTA',
+  SET_BARISTA_ACTIVE_TURNS: 'SET_BARISTA_ACTIVE_TURNS',
+  ADD_BARISTA_ACTIVE_TURN: 'ADD_BARISTA_ACTIVE_TURN',
+  REMOVE_CUSTOMER_ACTIVE_TURN: 'REMOVE_CUSTOMER_ACTIVE_TURN',
+
+  // App
+  UPDATE_SELECTED_BRANCH: 'UPDATE_SELECTED_BRANCH',
   START_LOAD: 'START_LOAD',
   END_LOAD: 'END_LOAD',
-  UPDATE_AUTHENTICATION: 'UPDATE_AUTHENTICATION',
 };
 
-function customerReducer(state = customer, action) {
-  return state;
-}
 
 function baristaReducer(state = barista, action) {
   let status;
@@ -87,27 +113,91 @@ function baristaReducer(state = barista, action) {
 }
 
 function userReducer(state=user, action) {
-  let status;
-
   switch(action.type) {
-    case actions.UPDATE_AUTHENTICATION:
-      status = { authenticated: action.authenticated };
-      return Object.assign({}, state, { status });
+    case actions.SET_USER:
+      var { id, name, email, picture } = action.user;
+      return Object.assign({}, { id, name, email, picture, roles: { customer } });
+    case actions.UPDATE_USER:
+      var { id, name, email, picture } = action.user;
+      return Object.assign({}, state, { id, name, email, picture });
+    case actions.UPDATE_USER_STATUS:
+      return Object.assign({}, state, { status: action.status });
+    case actions.UPDATE_USER_ROLE:
+      switch(action.role.type) {
+        case 'customer':
+          var roles = Object.assign({}, state.roles, { customer });
+          return Object.assign({}, state, { roles });
+          break;
+        case 'hostess':
+          var roles = Object.assign({}, state.roles, { barista });
+          return Object.assign({}, state, { roles });
+          break;
+        case 'admin':
+          state.roles = Object.assign({}, state.roles, { admin });
+          return state;
+          break;
+        case 'owner':
+          return Object.assign({}, state.roles, { owner });
+          break;
+      }
+    case actions.SET_CUSTOMER_ACTIVE_TURNS:
+      var active = action.turns;
+      // TODO: Clean turns
+      state.roles.customer.turns = Object.assign({}, state.roles.customer.turns, { active });
+      return Object.assign({}, state);
+
+    case actions.ADD_CUSTOMER_ACTIVE_TURN:
+      // TODO: Clean turns
+      state.roles.customer.turns.active = state.roles.customer.turns.active.map(
+        turn => Object.assign({}, turn)
+      );
+      state.roles.customer.turns.active.push(action.turn);
+      return Object.assign({}, state);
+
+    case actions.REMOVE_CUSTOMER_ACTIVE_TURN:
+      // TODO: Clean turns
+      state.roles.customer.turns.active = state.roles.customer.turns.active.reduce((turns, turn) => {
+        if (turn.id != action.turn.id) {
+          turns.push(Object.assign({}, turn));
+        }
+
+        return turns;
+      }, []);
+      return Object.assign({}, state);
+
+    case actions.SET_BARISTA_ACTIVE_TURNS:
+      var active = action.turns;
+      // TODO: Clean turns
+      state.roles.barista.branch.turns = Object.assign({}, state.roles.barista.branch.turns, { active });
+      return Object.assign({}, state);
+
+    case actions.LOCK_BARISTA:
+      state.roles.barista.status = Object.assign({}, state.roles.barista.status, { isLocked: true });
+      return Object.assign({}, state);
+
+    case actions.UNLOCK_BARISTA:
+      state.roles.barista.status = Object.assign({}, state.roles.barista.status, { isLocked: false });
+      return Object.assign({}, state);
+
     default:
       return state;
   }
 }
 
 function appReducer(state=app, action) {
-  let status;
 
   switch(action.type) {
+
     case actions.START_LOAD:
-      status = { loading: true };
+      var status = { loading: true };
       return Object.assign({}, state, { status });
     case actions.END_LOAD:
-      status = { loading: false };
+      var status = { loading: false };
       return Object.assign({}, state, { status });
+
+    case actions.UPDATE_SELECTED_BRANCH:
+      var { branch } = action;
+      return Object.assign({}, state, { selectedBranch: branch });
     default:
       return state;
   }
@@ -116,9 +206,6 @@ function appReducer(state=app, action) {
 const rootReducer = combineReducers({
   app: appReducer,
   user: userReducer,
-  barista: baristaReducer,
-  customer: customerReducer,
-  turns: turnsReducer,
 });
 
 

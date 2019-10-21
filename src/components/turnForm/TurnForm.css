@@ -1,0 +1,19 @@
+.new.card {
+  box-shadow: none !important;
+  border: 1px dashed #D4D4D5 !important;
+  cursor: pointer;
+}
+
+.new.card:hover {
+  /* background: #de614e; */
+  background: #F2F2F2;
+}
+
+.new.card:hover .meta {
+  /* color: #FFF; */
+}
+
+.new.card .content {
+  /* padding: 2em !important; */
+  font-weight: bold !important;
+}
