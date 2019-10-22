@@ -71,7 +71,8 @@ class Requester {
   }
 
   _buildBaseUrl() {
-    return `${this._protocol}://${this._host}:${this._port}/${this._version}`
+    const portSuffix = this._port ? `:${this._port}` : '';
+    return `${this._protocol}://${this._host}${portSuffix}/${this._version}`
   }
 }
 
