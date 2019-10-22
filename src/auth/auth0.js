@@ -22,7 +22,7 @@ export default class Auth0 extends Auth {
     this._accessToken = localStorage.getItem('accessToken', null);
     this._idToken = localStorage.getItem('idToken', null);
     this._expiresAt = localStorage.getItem('expiresAt', 0);
-    this._logoutRedirection = 'https://smn-barista.netlify.com';
+    this._logoutRedirection = 'https://smn.grevych.com';
   }
 
   get accessToken() {
