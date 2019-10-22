@@ -9,7 +9,7 @@ import { actions } from './reducer';
 new API({
   protocol: 'https',
   host: 'sitmenow.herokuapp.com',
-  port: '80',
+  port: null,
   version: 'v1',
 })
 
