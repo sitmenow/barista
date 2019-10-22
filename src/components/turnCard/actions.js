@@ -91,7 +91,7 @@ export const prepareTurn = (turn) =>
       .then((preparedTurn) => {
         // TODO: use canceled turn for the dispatch action
         // dispatch({ type: actions.UPDATE_BRANCH_ACTIVE_TURN, turn });
-        dispatch({ type: actions.LOCK_BARISTA });
+        // dispatch({ type: actions.LOCK_BARISTA });
         dispatch({ type: actions.END_LOAD });
       })
       .catch((error) => {
@@ -111,7 +111,7 @@ export const unprepareTurn = (turn) =>
       .then((unpreparedTurn) => {
         // TODO: use canceled turn for the dispatch action
         // dispatch({ type: actions.UPDATE_BRANCH_ACTIVE_TURN, turn });
-        dispatch({ type: actions.UNLOCK_BARISTA });
+        // dispatch({ type: actions.UNLOCK_BARISTA });
         dispatch({ type: actions.END_LOAD });
       })
       .catch((error) => {
