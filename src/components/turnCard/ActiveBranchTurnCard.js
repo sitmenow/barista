@@ -74,10 +74,9 @@ class ActiveBranchTurnCard extends React.Component {
     return (
       <div
         style={ this.turnStyle(this.props.open, this.props.index) }
-        className='ui item'
-        onClick={ () => this.props.onClick(this.props.id) }
-      >
-        <div className='ui content'>
+        className='ui item'>
+        <div className='ui content'
+          onClick={ () => this.props.onClick(this.props.id) }>
           <div className='right floated'>
             <div style={this.timeStyle} className='meta'>
               {moment(this.props.requestedTime).startOf('minute').fromNow()}
@@ -112,7 +111,10 @@ class ActiveBranchTurnCard extends React.Component {
         <div className="ui content" style={ this.rightBannerStyle }>
           <button
             className="ui right floated primary tiny button"
-            onClick={ () => this.props.prepareTurn(this.props) }
+            onClick={ () => {
+              this.props.prepareTurn(this.props);
+              this.props.onPreparation();
+            }}
           >
             Prepare
           </button>
@@ -123,7 +125,7 @@ class ActiveBranchTurnCard extends React.Component {
         <div className="ui content" style={ this.rightBannerStyle }>
           <button
             className="ui right floated primary tiny button"
-            onClick={ () => this.props.prepareTurn(this.props) }
+            onClick={ () => this.props.serveTurn(this.props) }
           >
             Serve
           </button>
@@ -135,7 +137,10 @@ class ActiveBranchTurnCard extends React.Component {
           <button
             className="ui right floated negative tiny button"
             style={{ background: 'rgb(228, 58, 58)' }}
-            onClick={ () => this.props.unprepareTurn(this.props) }
+            onClick={ () => {
+              this.props.unprepareTurn(this.props);
+              this.props.onUnpreparation();
+            }}
           >
             Unprepare
           </button>

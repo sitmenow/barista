@@ -6,19 +6,27 @@ import TurnCardFactory from '../turnCard/TurnCardFactory';
 class TurnsList extends React.Component {
   state = {
     selectedTurnId: null,
+    isListLocked: false,
   };
 
-  handleTurnSelection = (isUserPreparing) => (turnId) => {
+  handleTurnSelection = (turnId) => {
     const selectedTurnId = this.state.selectedTurnId == turnId ? null : turnId;
 
-    if (!isUserPreparing) {
+    if (!this.state.isListLocked) {
         this.setState({ selectedTurnId });
     }
-  }
+  };
+
+  handleTurnPreparation = () => {
+    this.setState({ isListLocked: true });
+  };
+
+  handleTurnUnpreparation = () => {
+    this.setState({ isListLocked: false });
+  };
 
   render() {
     const { allowManagement, turns, user, type } = this.props;
-    const { selectedTurnId } = this.state;
 
     return (
       <div className='ui divided fluid items' style={{ margin: 0 }}>
@@ -30,9 +38,11 @@ class TurnsList extends React.Component {
                 {
                   key: index,
                   index: index,
-                  open: true, //this.state.selectedTurnId === turn.id,
-                  lock: user.status.isLocked,
-                  onClick: this.handleTurnSelection(user.status.isLocked),
+                  open: this.state.selectedTurnId === turn.id,
+                  lock: this.state.isListLocked,
+                  onClick: (turnId) => this.handleTurnSelection(turnId),
+                  onPreparation: () => this.handleTurnPreparation(),
+                  onUnpreparation: () => this.handleTurnUnpreparation(),
                   type,
                   allowManagement,
                 },
