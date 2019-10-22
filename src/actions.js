@@ -8,7 +8,7 @@ import { actions } from './reducer';
 // TODO: Take this from env
 new API({
   protocol: 'https',
-  host: 'https://sitmenow.herokuapp.com',
+  host: 'sitmenow.herokuapp.com',
   port: '80',
   version: 'v1',
 })
