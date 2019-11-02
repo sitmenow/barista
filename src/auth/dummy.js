@@ -2,13 +2,13 @@ import Auth from './index';
 
 
 export default class Dummy extends Auth {
-  constructor({ profile }) {
+  constructor({ accessToken, idToken, logoutRedirection, profile }) {
     super();
 
-    this._accessToken = 'ACCESS_TOKEN';
-    this._idToken = 'ID_TOKEN';
+    this._accessToken = accessToken;
+    this._idToken = idToken;
     this._expiresAt = 'NEVER';
-    this._logoutRedirection = '/';
+    this._logoutRedirection = logoutRedirection;
     this._profile = profile;
   }
 
@@ -40,7 +40,7 @@ export default class Dummy extends Auth {
   }
 
   isAuthenticated() {
-    return true;
+    return false;
   }
 
   setSession(authResult) {

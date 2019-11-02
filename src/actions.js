@@ -1,31 +1,15 @@
-// import AuthFactory from './auth/factory';
-import Auth0 from './auth/auth0';
+import AuthFactory from './auth/factory';
 import API from './api';
 import User from './api/user';
 import { actions } from './reducer';
 
 
-// TODO: Take this from env
-new API({
-  protocol: 'https',
-  host: 'sitmenow.herokuapp.com',
-  port: null,
-  version: 'v1',
-})
-
-// Any unauthorized api call should dispatch a logout
-const api = new API().getInstance();
+const config = JSON.parse(process.env.NODE_CONFIG);
 
 // TODO: Handle error as setup error
-// const auth = AuthFactory.create(config.auth);
-const auth = new Auth0({
-  domain: 'sitmenow.auth0.com',
-  clientID: '2c3q1IpRx9mCO8Mjl7bD1Md7uQcJ2wZg',
-  redirectUri: 'http://localhost:3000/',
-  responseType: 'token id_token',
-  scope: 'openid profile read:turns',
-  audience: 'https://coffee-shop.sitmenow.com',
-});
+// TODO: Any unauthorized api call should dispatch a logout
+const api = new API(config.api).getInstance();
+const auth = new AuthFactory.create(config.auth);
 
 export const login = (hash, history) =>
   (dispatch: Function, getState: Function) => {

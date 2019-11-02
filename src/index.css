@@ -15,11 +15,12 @@ code {
 
 #root {
   height: 100%;
+  /* overflow: hidden; */
 }
 
 .ui.grid.app {
   margin-top: 0;
   margin-bottom: 0;
   height: 100%;
-  min-width: 900px;
+  /* min-width: 900px; */
 }

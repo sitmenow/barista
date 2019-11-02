@@ -36,18 +36,11 @@ class ActiveCustomerTurnCard extends React.Component {
     color: 'rgb(242, 242, 242)',
   };
 
-  turnStyle = (open, index) => {
+  turnStyle = (open) => {
     const style = {
-      position: 'relative',
       cursor: 'pointer',
-      display: 'block',
-      padding: '1em 1em',
-      zIndex: 100,
     };
 
-    if (index === 0) {
-      style.borderTop = 'none';
-    }
 
     if (open) {
       style.background = 'rgba(0, 0, 0, 0.05)';
@@ -65,42 +58,51 @@ class ActiveCustomerTurnCard extends React.Component {
 
   render() {
     return (
-      <div
-        style={ this.turnStyle(this.props.open, this.props.index) }
-        className='ui item'
-        onClick={ () => this.props.onClick(this.props.id) }
-      >
-        <div className='ui content'>
-          <div className='right floated'>
-            <div style={this.timeStyle} className='meta'>
-              {moment(this.props.requestedTime).startOf('minute').fromNow()}
+      <>
+        <div className='computer tablet only four wide computer three wide tablet column'></div>
+        <div className='eight wide computer ten wide tablet sixteen wide mobile column' style={{ padding: 0 }}>
+          <div className='ui fluid card' style={ this.turnStyle(this.props.open) } onClick={ () => this.props.onClick(this.props.id) } >
+            <div className='ui content'>
+              <div style={this.timeStyle} className='right floated meta'>
+                {moment(this.props.requestedTime).startOf('minute').fromNow()}
+              </div>
+              <div className='header'>{this.props.name}</div>
+              <div style={this.labelStyle} className={'ui horizontal medium right floated label'}>
+                EWT
+                <div className="detail">Y min</div>
+              </div>
+              <span className='description'>{this.props.product}</span>
+              <div className='meta' style={{ marginBottom: 0 }}>
+                {this.props.company || 'Visitor'}
+              </div>
             </div>
-
-            <div style={this.labelStyle} className={'ui horizontal medium right floated label'}>
-              EWT
-              <div className="detail">Y min</div>
-            </div>
-
-          </div>
-          <div className='header'>{this.props.name}</div>
-          <div className='description'>{this.props.product}</div>
-          <div className='meta' style={{ marginBottom: 0 }}>
-              {this.props.company || 'Visitor'}
           </div>
         </div>
-
-        { this.props.open &&
-        <div className="ui content" style={ this.bannerStyle }>
-          <button
-            className="ui right floated negative tiny button"
-            style={{ background: 'rgb(228, 58, 58)' }}
-            onClick={ () => this.props.cancelTurn(this.props) }
-          >
-            Cancel
-          </button>
+        <div className='computer tablet only four wide computer three wide tablet column'>
+          { this.props.open &&
+            <button
+              className="ui small negative button"
+              style={{ background: 'rgb(228, 58, 58)' }}
+              onClick={ () => this.props.cancelTurn(this.props) }
+            >
+              Cancel
+            </button>
+          }
         </div>
-        }
-      </div>
+
+        <div className='mobile only sixteen wide column' style={{ textAlign: 'center', padding: '0.5em' }}>
+          { this.props.open &&
+            <button
+              className="ui small negative button"
+              style={{ background: 'rgb(228, 58, 58)', marginBottom: '1em' }}
+              onClick={ () => this.props.cancelTurn(this.props) }
+            >
+              Cancel
+            </button>
+          }
+        </div>
+        <div className='computer tablet only sixteen wide column' style={{ padding: '0.5em' }}></div>
+        </>
     );
   }
 }

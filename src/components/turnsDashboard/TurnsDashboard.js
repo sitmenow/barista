@@ -80,47 +80,40 @@ class TurnsDashboard extends React.Component {
     }
 
     return (
-      <div className='column'>
-        {
-          branch &&
-            <BranchHeader
-              { ...branch }
-              createTurnButtonOnClick={ () => this.enableTurnForm() }
-            />
-        }
-        <Menu
-          activeTurnsButtonOnClick={ () => this.enableActiveTurnsList() }
-          completedTurnsButtonOnClick={ () => this.enableCompletedTurnsList() }
-          isActiveTurnsListEnabled={ this.state.isActiveTurnsListEnabled }
-          isCompletedTurnsListEnabled={ this.state.isCompletedTurnsListEnabled }
-        />
-        {
-          this.state.isTurnFormEnabled &&
-            <TurnForm
-              user={ user }
-              cancelButtonOnClick={ () => this.disableTurnForm() }
-            /> 
-        }
+      <>
+        { branch && <BranchHeader { ...branch } createTurnButtonOnClick={ () => this.enableTurnForm() } /> }
 
-        {/* TODO: Show loader when app is in loading state */}
-        {
-          this.state.isActiveTurnsListEnabled &&
-            <TurnsList
-              user={ role }
-              turns={ activeTurns }
-              type={ 'active-' + listType }
-              allowManagement={ allowManagement }
+        <div className='ui centered grid' style={{ margin: 0 }}>
+          <div className='eight wide computer ten wide tablet sixteen wide mobile column' style={{ padding: 0 }}>
+            <Menu
+              activeTurnsButtonOnClick={ () => this.enableActiveTurnsList() }
+              completedTurnsButtonOnClick={ () => this.enableCompletedTurnsList() }
+              isActiveTurnsListEnabled={ this.state.isActiveTurnsListEnabled }
+              isCompletedTurnsListEnabled={ this.state.isCompletedTurnsListEnabled }
             />
-        }
-        {
-          this.state.isCompletedTurnsListEnabled &&
-            <TurnsList
-              user={ role }
-              turns={ completedTurns }
-              type={ 'detailed-' + listType }
-            />
-        }
-      </div>
+            { this.state.isTurnFormEnabled && <TurnForm user={ user } cancelButtonOnClick={ () => this.disableTurnForm() } /> }
+          </div>
+        </div>
+
+          {/* TODO: Show loader when app is in loading state */}
+          {
+            this.state.isActiveTurnsListEnabled &&
+              <TurnsList
+                user={ role }
+                turns={ activeTurns }
+                type={ 'active-' + listType }
+                allowManagement={ allowManagement }
+              />
+          }
+          {
+            this.state.isCompletedTurnsListEnabled &&
+              <TurnsList
+                user={ role }
+                turns={ completedTurns }
+                type={ 'detailed-' + listType }
+              />
+          }
+      </>
     );
   }
 }
