@@ -3,8 +3,23 @@ import API from './api';
 import User from './api/user';
 import { actions } from './reducer';
 
-
-const config = JSON.parse(process.env.NODE_CONFIG);
+const config = process.env.NODE_CONFIG ? JSON.parse(process.env.NODE_CONFIG) : {
+  api: {
+    protocol: 'https',
+    host: 'sitmenow.herokuapp.com',
+    port: null,
+    version: 'v1',
+  },
+  auth: {
+    adapter: 'auth0',
+    domain: 'sitmenow.auth0.com',
+    clientID: '2c3q1IpRx9mCO8Mjl7bD1Md7uQcJ2wZg',
+    redirectUri: 'https://smn.grevych.com/',
+    responseType: 'token id_token',
+    scope: 'openid profile',
+    audience: 'https://coffee-shop.sitmenow.com',
+  },
+};
 
 // TODO: Handle error as setup error
 // TODO: Any unauthorized api call should dispatch a logout
