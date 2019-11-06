@@ -31,8 +31,10 @@ export const cancelTurn = (turn) =>
     apiTurn
       .cancel()
       .then((canceledTurn) => {
-        // TODO: use canceled turn for the dispatch action
-        dispatch({ type: actions.REMOVE_CUSTOMER_ACTIVE_TURN, turn });
+        dispatch({
+          type: actions.REMOVE_CUSTOMER_ACTIVE_TURN,
+          turn: canceledTurn,
+        });
         dispatch({ type: actions.END_LOAD });
       })
       .catch((error) => {
@@ -51,7 +53,7 @@ export const serveTurn = (turn) =>
       .serve()
       .then((servedTurn) => {
         // TODO: use canceled turn for the dispatch action
-        dispatch({ type: actions.REMOVE_BRANCH_ACTIVE_TURN, turn });
+        dispatch({ type: actions.REMOVE_BRANCH_ACTIVE_TURN, turn: servedTurn });
         dispatch({ type: actions.UNLOCK_BARISTA });
         dispatch({ type: actions.END_LOAD });
       })
@@ -71,7 +73,8 @@ export const rejectTurn = (turn) =>
       .reject()
       .then((rejectedTurn) => {
         // TODO: use canceled turn for the dispatch action
-        dispatch({ type: actions.REMOVE_BRANCH_ACTIVE_TURN, turn });
+        dispatch({ type: actions.REMOVE_BRANCH_ACTIVE_TURN, turn: rejectedTurn });
+        dispatch({ type: actions.UNLOCK_BARISTA });
         dispatch({ type: actions.END_LOAD });
       })
       .catch((error) => {

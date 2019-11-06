@@ -70,8 +70,8 @@ const actions = {
   LOCK_BARISTA: 'LOCK_BARISTA',
   UNLOCK_BARISTA: 'UNLOCK_BARISTA',
   SET_BARISTA_ACTIVE_TURNS: 'SET_BARISTA_ACTIVE_TURNS',
-  ADD_BARISTA_ACTIVE_TURN: 'ADD_BARISTA_ACTIVE_TURN',
-  REMOVE_CUSTOMER_ACTIVE_TURN: 'REMOVE_CUSTOMER_ACTIVE_TURN',
+  ADD_BRANCH_ACTIVE_TURN: 'ADD_BRANCH_ACTIVE_TURN',
+  REMOVE_BRANCH_ACTIVE_TURN: 'REMOVE_BRANCH_ACTIVE_TURN',
 
   // App
   UPDATE_SELECTED_BRANCH: 'UPDATE_SELECTED_BRANCH',
@@ -170,6 +170,26 @@ function userReducer(state=user, action) {
       // TODO: Clean turns
       state.roles.barista.branch.turns = Object.assign({}, state.roles.barista.branch.turns, { active });
       return Object.assign({}, state);
+
+    case actions.ADD_BRANCH_ACTIVE_TURN:
+      // TODO: Clean turns
+      state.roles.barista.branch.turns.active = state.roles.barista.branch.turns.active.map(
+        turn => Object.assign({}, turn)
+      );
+      state.roles.barista.branch.turns.active.push(action.turn);
+      return Object.assign({}, state);
+
+    case actions.REMOVE_BRANCH_ACTIVE_TURN:
+      // TODO: Clean turns
+      state.roles.barista.branch.turns.active = state.roles.barista.branch.turns.active.reduce((turns, turn) => {
+        if (turn.id != action.turn.id) {
+          turns.push(Object.assign({}, turn));
+        }
+
+        return turns;
+      }, []);
+      return Object.assign({}, state);
+
 
     case actions.LOCK_BARISTA:
       state.roles.barista.status = Object.assign({}, state.roles.barista.status, { isLocked: true });

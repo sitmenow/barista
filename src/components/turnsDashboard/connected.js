@@ -5,10 +5,8 @@ import TurnsDashboard from './TurnsDashboard';
 import {
   loadBranchActiveTurns,
   loadCustomerActiveTurns,
-  addBranchTurn,
-  addCustomerTurn,
-  removeBranchTurn,
-  removeCustomerTurn,
+  createTurnAsCustomer,
+  createTurnAsBarista,
 } from './actions';
 
 
@@ -40,20 +38,26 @@ const mapStateToTurnsDashboardProps = (state, props) => {
 const mapDispatchToTurnsDashboardProps = (dispatch, props) => {
   let loadActiveTurns = () => async () => {};
   let loadCompletedTurns = () => async () => {};
+  let createTurn = () => async () => {};
 
   const { barista, customer } = props;
 
   if (barista) {
+    createTurn = createTurnAsBarista;
     loadActiveTurns = loadBranchActiveTurns;
     // loadCompletedTurns = () => async () => {};
   }
 
   if (customer) {
+    createTurn = createTurnAsCustomer;
     loadActiveTurns = loadCustomerActiveTurns;
     // loadCompletedTurns = () => async () => {};
   }
 
-  return bindActionCreators({ loadActiveTurns, loadCompletedTurns }, dispatch);
+  return bindActionCreators(
+    { loadActiveTurns, loadCompletedTurns, createTurn },
+    dispatch
+  );
 };
 
 const mergeTurnsDashboardProps = (stateProps, dispatchProps, ownProps) => (
