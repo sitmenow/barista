@@ -22,8 +22,18 @@
   margin-bottom: 0;
 }
 
-.cancel {
+.reject {
   background: rgb(228, 58, 58) !important;
+}
+
+.prepare {
+}
+
+.unprepare {
+  background: rgb(228, 58, 58) !important;
+}
+
+.serve {
 }
 
 .mobile.action.wrapper {

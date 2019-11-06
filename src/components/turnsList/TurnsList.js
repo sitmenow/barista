@@ -25,12 +25,12 @@ class TurnsList extends React.Component {
     this.setState({ isListLocked: false });
   };
 
+  // <div style={{ overflowY: 'overlay', height: '50%', margin: '1em -1em 0 -1em'}}>
   render() {
     const { allowManagement, turns, user, type } = this.props;
 
     return (
-      <div className='ui divided fluid items' style={{ margin: 0 }}>
-        <div style={{ padding: 0, border: 'none' }}></div>
+      <div className='ui grid' style={{ margin: '1em 0 0 0', alignItems:'center'}}>
         {
           turns.map((turn, index) =>
             TurnCardFactory.create(
@@ -51,7 +51,6 @@ class TurnsList extends React.Component {
             )
           )
         }
-        <div style={{ padding: 0, border: 'none' }}></div>
       </div>
     );
   }

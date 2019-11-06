@@ -8,23 +8,6 @@ class BranchHeader extends React.Component {
     isMenuEnabled: false,
   };
 
-  leftLabelStyle = {
-    marginTop: '1em',
-    background: 'rgb(242, 242, 242)',
-    color: '#403c3c',
-    margin: 0,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-  };
-
-  rightLabelStyle = {
-    color: 'rgb(242, 242, 242)',
-    background: '#403c3c',
-    margin: 0,
-    borderTopLeftRadius: 0,
-    borderBottomLeftRadius: 0,
-  };
-
   enableMenu = () => {
     this.setState({
       showMenu: !this.state.showMenu,
@@ -44,41 +27,39 @@ class BranchHeader extends React.Component {
 
     return (
       <>
-        <div className='ui fluid card'>
-          <div className="content">
-            <div className="ui right floated dropdown" onClick={ () => this.enableMenu() }>
-              <i className="caret down icon"></i>
-              <div className={ this.getDropdownClass() }>
-                <div className="item" onClick={ this.props.createTurnButtonOnClick }>New Turn</div>
+        <div className='ui grid' style={{ marginTop: 0, marginBottom: 0 }}>
+          <div className="five wide computer five wide tablet ten wide mobile column" style={{ paddingTop: '0' }}>
+            <div className="ui fluid card" style={{ boxShadow: 'none' }}>
+              <div className="content" style={{ padding: '0' }}>
+                <div className="header">{ brand.name }</div>
+                <div className="meta">{ name }</div>
               </div>
             </div>
-            <div className='left floated tiny ui image' style={{ marginBottom: 0 }}>
-              <img src={ brand.picture } />
-            </div>
-            <div className="header">{ brand.name }</div>
-            <div className="meta">{ name }</div>
-            <div className="left floated" style={{ marginTop: '1em' }}>
-              <div className="ui label" style={ this.leftLabelStyle }>
-                Open
+          </div>
+          <div className='six wide computer six wide tablet six wide mobile column' style={{ paddingTop: '0' }}>
+            <img className='ui tiny circle image' style={{ margin: 'auto' }} src={ brand.picture } />
+          </div>
+          <div className='tablet computer only five wide computer five wide tablet column' style={{ paddingTop: '0' }}>
+            <div className="ui right floated left labeled tiny button" tabIndex="0">
+              <a className="ui label" style={{ background: 'rgb(64, 60, 60)', color: 'white' }}>
+                16 min
+              </a>
+              <div className="ui icon primary tiny button" style={{ background: '#de604f', cursor: 'pointer' }} onClick={ this.props.createTurnButtonOnClick }>
+                Create Turn
               </div>
-              <div className="ui label" style={ this.rightLabelStyle }>
-                X min
+            </div>
+          </div>
+          <div className='mobile only fifteen wide mobile column' style={{ paddingTop: '0', marginTop: '-42px' }}>
+            <div className="ui left labeled tiny button" tabIndex="0">
+              <a className="ui label" style={{ background: 'rgb(64, 60, 60)', color: 'white' }}>
+                16 min
+              </a>
+              <div className="ui icon primary tiny button" style={{ background: '#de604f', cursor: 'pointer' }} onClick={ this.props.createTurnButtonOnClick }>
+                Create Turn
               </div>
             </div>
-
-            {/*
-            <div className="description">
-              Coffee Shop
-            </div>
-            */}
           </div>
         </div>
-
-        {/*
-        <span className="ui horizontal divider" style={{ color: 'rgba(0, 0, 0, 0.4)', fontWeight: 'lighter' }}>
-          X min
-        </span>
-        */}
       </>
     );
   }

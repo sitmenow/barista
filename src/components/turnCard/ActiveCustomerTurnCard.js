@@ -25,82 +25,58 @@ const mergeActiveCustomerTurnCardProps = (stateProps, dispatchProps, ownProps) =
 
 
 class ActiveCustomerTurnCard extends React.Component {
-  timeStyle = {
-    margin: 0,
-    textAlign: 'right',
-  };
+  static CancelButton = ({ onClick }) => (
+    <button className="ui left floated small negative button cancel" onClick={ onClick } >
+      Cancel
+    </button>
+  );
 
-  labelStyle = {
-    margin: '1em 0 0 0',
-    background: '#ec6550',
-    color: 'rgb(242, 242, 242)',
-  };
-
-  turnStyle = (open, index) => {
-    const style = {
-      position: 'relative',
-      cursor: 'pointer',
-      display: 'block',
-      padding: '1em 1em',
-      zIndex: 100,
-    };
-
-    if (index === 0) {
-      style.borderTop = 'none';
-    }
-
-    if (open) {
-      style.background = 'rgba(0, 0, 0, 0.05)';
-    }
-
-    return style;
-  };
-
-  bannerStyle = {
-    position: 'absolute',
-    width: '120%',
-    top: '30%',
-    zIndex: 0,
+  getTurnCardClass = () => {
+    if (this.props.open) return 'ui fluid card selected';
+    return 'ui fluid card';
   };
 
   render() {
     return (
-      <div
-        style={ this.turnStyle(this.props.open, this.props.index) }
-        className='ui item'
-        onClick={ () => this.props.onClick(this.props.id) }
-      >
-        <div className='ui content'>
-          <div className='right floated'>
-            <div style={this.timeStyle} className='meta'>
-              {moment(this.props.requestedTime).startOf('minute').fromNow()}
-            </div>
+      <>
+        <div className='computer tablet only four wide computer three wide tablet column'>
+        </div>
 
-            <div style={this.labelStyle} className={'ui horizontal medium right floated label'}>
-              EWT
-              <div className="detail">Y min</div>
+        <div className='eight wide computer ten wide tablet sixteen wide mobile column turn wrapper'>
+          <div className={ this.getTurnCardClass() } onClick={ () => this.props.onClick(this.props.id) } >
+            <div className='ui content'>
+              <div className='right floated meta time'>
+                { moment(this.props.requestedTime).startOf('minute').fromNow() }
+              </div>
+              <div className='header'>
+                { this.props.name }
+              </div>
+              <div className='ui horizontal medium right floated label ewt'>
+                EWT
+                <div className="detail">
+                  Y min
+                </div>
+              </div>
+              <span className='description product'>
+                { this.props.product }
+              </span>
+              <div className='meta company'>
+                { this.props.company || 'Visitor' }
+              </div>
             </div>
-
-          </div>
-          <div className='header'>{this.props.name}</div>
-          <div className='description'>{this.props.product}</div>
-          <div className='meta' style={{ marginBottom: 0 }}>
-              {this.props.company || 'Visitor'}
           </div>
         </div>
 
-        { this.props.open &&
-        <div className="ui content" style={ this.bannerStyle }>
-          <button
-            className="ui right floated negative tiny button"
-            style={{ background: 'rgb(228, 58, 58)' }}
-            onClick={ () => this.props.cancelTurn(this.props) }
-          >
-            Cancel
-          </button>
+        <div className='computer tablet only four wide computer three wide tablet column'>
+          { this.props.open && <ActiveCustomerTurnCard.CancelButton onClick={ () => this.props.cancelTurn(this.props) } /> }
         </div>
-        }
-      </div>
+
+        <div className='mobile only sixteen wide column action wrapper'>
+          { this.props.open && <ActiveCustomerTurnCard.CancelButton onClick={ () => this.props.cancelTurn(this.props) } /> }
+        </div>
+        <div className='computer tablet only sixteen wide column blank'>
+        </div>
+      </>
     );
   }
 }
