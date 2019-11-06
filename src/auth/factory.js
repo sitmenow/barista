@@ -5,7 +5,7 @@ import Dummy from './dummy';
 const create = (config) => {
   let auth = null;
 
-  switch(config) {
+  switch(config.adapter) {
     case 'auth0':
       auth = new Auth0(config);
       break;

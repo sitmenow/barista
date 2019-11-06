@@ -10,19 +10,18 @@ export default class Auth0 extends Auth {
     super();
 
     this._auth0 = new auth0.WebAuth({
-      domain: 'sitmenow.auth0.com',
-      clientID: '2c3q1IpRx9mCO8Mjl7bD1Md7uQcJ2wZg',
-      redirectUri: 'https://smn.grevych.com',
-      responseType: 'token id_token',
-      scope: 'openid profile',
-      audience: 'https://coffee-shop.sitmenow.com',
+      domain,
+      clientID,
+      redirectUri,
+      responseType,
+      scope,
+      audience,
     });
-
 
     this._accessToken = localStorage.getItem('accessToken', null);
     this._idToken = localStorage.getItem('idToken', null);
     this._expiresAt = localStorage.getItem('expiresAt', 0);
-    this._logoutRedirection = 'https://smn.grevych.com';
+    this._logoutRedirection = redirectUri;
   }
 
   get accessToken() {
