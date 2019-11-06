@@ -47,14 +47,48 @@ export const loadCustomerActiveTurns = () =>
       });
   }
 
-export const addCustomerTurn = () =>
-  async (dispatch: Function, getState: Function) => {};
+export const createTurnAsCustomer = (turn) =>
+  async (dispatch: Function, getState: Function) => {
+    const branch = getState().app.selectedBranch;
+    const apiBrand = new Brand(branch.brand, api.requester);
+    const apiBranch = new Branch(
+      Object.assign({}, branch, { brand: apiBrand }),
+      api.requester
+    );
 
-export const removeCustomerTurn = () =>
-  async (dispatch: Function, getState: Function) => {};
+    dispatch({ type: actions.START_LOAD });
 
-export const addBranchTurn = () =>
-  async (dispatch: Function, getState: Function) => {};
+    apiBranch
+      .createTurn(turn)
+      .then((createdTurn) => {
+        dispatch({ type: actions.ADD_CUSTOMER_ACTIVE_TURN, turn: createdTurn });
+        dispatch({ type: actions.END_LOAD });
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatch({ type: actions.END_LOAD });
+      });
+  };
 
-export const removeBranchTurn = () =>
-  async (dispatch: Function, getState: Function) => {};
+export const createTurnAsBarista = (turn) => 
+  async (dispatch: Function, getState: Function) => {
+    const branch = getState().app.selectedBranch;
+    const apiBrand = new Brand(branch.brand, api.requester);
+    const apiBranch = new Branch(
+      Object.assign({}, branch, { brand: apiBrand }),
+      api.requester
+    );
+
+    dispatch({ type: actions.START_LOAD });
+
+    apiBranch
+      .createTurn(turn)
+      .then((createdTurn) => {
+        dispatch({ type: actions.ADD_BRANCH_ACTIVE_TURN, turn: createdTurn });
+        dispatch({ type: actions.END_LOAD });
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatch({ type: actions.END_LOAD });
+      });
+  };

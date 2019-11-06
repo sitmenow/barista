@@ -45,7 +45,7 @@ class TurnForm extends React.Component {
   handleFormSubmit = (e) => {
     e.preventDefault();
 
-    this.props.createTurnAsCustomer(this.state.turn);
+    this.props.createButtonOnClick(this.state.turn);
     this.props.cancelButtonOnClick();
   };
 
