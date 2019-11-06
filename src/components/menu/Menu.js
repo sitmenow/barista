@@ -33,8 +33,15 @@ class Menu extends React.Component {
 
 
   topCardStyle = {
-    backgroundColor: 'rgb(64, 60, 60)',
-    color: '#AAA',
+    border: 'none',
+    boxShadow: 'none',
+    margin: 0,
+    padding: '0.5em 0 1em 0',
+  };
+
+  menuStyle = {
+    borderRadius: '2px',
+    margin: 0,
   };
 
   imageLogoStyle = {
@@ -69,56 +76,18 @@ class Menu extends React.Component {
   }
 
   render() {
-    {/*
-      Options:
-       - Log Out
-       - Go to Admin Dashboard
-       - Go to Barista Dashboard
-
-       Additionals:
-        - Turn notification card
-    */}
-
-    {/*
-      Customer:
-       - Turns
-       - Venues
-
-      Admin:
-       - Brands/Organizations
-          - Create Organization
-       - Venues
-
-      Barista:
-       - Turns
-       - Venues
-    */}
-
     return (
-      <div className='four wide column menu'>
+      <div className='computer tablet only four wide tablet three wide computer column' style={{ borderRight: '1px solid #1313210f' }}>
         <div className='column'>
-          <div style={ this.topCardStyle } className='ui fluid card'>
-            <div className="content">
-              <div className="ui fluid dropdown item" style={{ textAlign: 'center' }}>
-                <img className="ui avatar image"
-                     style={ this.imageLogoStyle }
-                     src="/coffee-outline-filled.png" />
-                {/*
-                <span className="ui header" style={ this.textLogoStyle }>
-                  Barista
-                </span>
-                <i className="ui right dropdown icon" style={ this.dropdownIconStyle }></i>
-                */}
-                <div className="menu">
-                  <div className="item">Applications</div>
-                  <div className="item">International Students</div>
-                  <div className="item">Scholarships</div>
-                </div>
-              </div>
+          <div style={ this.topCardStyle } className='ui fluid segment'>
+            <div className="content" style={{ textAlign: 'center' }}>
+              <img className="ui avatar image"
+                   style={ this.imageLogoStyle }
+                   src="/coffee-outline-filled.png" />
             </div>
           </div>
 
-          <div className="ui fluid vertical menu">
+          <div style={ this.menuStyle } className="ui fluid vertical menu">
             {
               this.props.profileOptionOnClick &&
                 <Menu.ProfileOption
@@ -151,13 +120,6 @@ class Menu extends React.Component {
                   turns={ this.props.turns }
                 />
             }
-
-            <div className="item">
-              <div className="ui transparent icon input">
-                <input type="text" placeholder="Search venue..." />
-                <i className="search icon"></i>
-              </div>
-            </div>
           </div>
         </div>
       </div>

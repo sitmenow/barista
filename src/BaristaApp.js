@@ -32,7 +32,7 @@ class BaristaApp extends React.Component {
         {/* Decorates Menu */}
         { React.cloneElement(this.props.children, { turns: barista.branch.turns.active }) }
 
-        <div className='seven wide column'>
+        <div className='thirteen wide computer twelve wide tablet sixteen wide mobile column'>
           { this.props.menu.isProfileOptionSelected && <div> Profile </div> }
           { this.props.menu.isVenuesOptionSelected && !branch && <BranchesDashboard barista={ barista }/> }
           { this.props.menu.isVenuesOptionSelected && branch && <TurnsDashboard user={ user } barista={ barista } branch={ branch }/> }

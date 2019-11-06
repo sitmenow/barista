@@ -3,7 +3,7 @@ import moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import './ActiveCustomerTurnCard.css';
+import './ActiveBranchTurnCard.css';
 import { prepareTurn, rejectTurn, serveTurn, unprepareTurn } from './actions';
 
 
@@ -25,128 +25,100 @@ const mergeActiveBranchTurnCardProps = (stateProps, dispatchProps, ownProps) => 
 
 
 class ActiveBranchTurnCard extends React.Component {
-  timeStyle = {
-    margin: 0,
-    textAlign: 'right',
-  };
+  static RejectButton = ({ onClick }) => (
+    <button className="ui left floated small negative button reject" onClick={ onClick } >
+      Reject
+    </button>
+  );
 
-  labelStyle = {
-    margin: '1em 0 0 0',
-    background: '#ec6550',
-    color: 'rgb(242, 242, 242)',
-  };
+  static PrepareButton = ({ onClick }) => (
+    <button className="ui right floated small primary button prepare" onClick={ onClick } >
+      Prepare
+    </button>
+  );
 
-  turnStyle = (open, index) => {
-    const style = {
-      position: 'relative',
-      cursor: 'pointer',
-      display: 'block',
-      padding: '1em 1em',
-      zIndex: 100,
-    };
+  static UnprepareButton = ({ onClick }) => (
+    <button className="ui left floated small negative button unprepare" onClick={ onClick } >
+      Unprepare
+    </button>
+  );
 
-    if (index === 0) {
-      style.borderTop = 'none';
-    }
+  static ServeButton = ({ onClick }) => (
+    <button className="ui right floated small primary button serve" onClick={ onClick } >
+      Serve
+    </button>
+  );
 
-    if (open) {
-      style.background = 'rgba(0, 0, 0, 0.05)';
-    }
-
-    return style;
-  };
-
-  bannerStyle = {
-    position: 'absolute',
-    width: '118%',
-    top: '30%',
-    zIndex: 0,
-  };
-
-  rightBannerStyle = {
-    position: 'absolute',
-    width: '140%',
-    top: '30%',
-    zIndex: 0,
+  getTurnCardClass = () => {
+    if (this.props.open) return 'ui fluid card selected';
+    return 'ui fluid card';
   };
 
   render() {
     return (
-      <div
-        style={ this.turnStyle(this.props.open, this.props.index) }
-        className='ui item'>
-        <div className='ui content'
-          onClick={ () => this.props.onClick(this.props.id) }>
-          <div className='right floated'>
-            <div style={this.timeStyle} className='meta'>
-              {moment(this.props.requestedTime).startOf('minute').fromNow()}
-            </div>
-
-            <div style={this.labelStyle} className={'ui horizontal medium right floated label'}>
-              EWT
-              <div className="detail">Y min</div>
-            </div>
-
-          </div>
-          <div className='header'>{this.props.name}</div>
-          <div className='description'>{this.props.product}</div>
-          <div className='meta' style={{ marginBottom: 0 }}>
-              {this.props.company || 'Visitor'}
-          </div>
-        </div>
-
-        { this.props.open && !this.props.lock &&
-        <div className="ui content" style={ this.bannerStyle }>
-          <button
-            className="ui right floated negative tiny button"
-            style={{ background: 'rgb(228, 58, 58)' }}
-            onClick={ () => this.props.rejectTurn(this.props) }
-          >
-            Reject
-          </button>
-        </div>
-        }
-
-        { this.props.open && !this.props.lock &&
-        <div className="ui content" style={ this.rightBannerStyle }>
-          <button
-            className="ui right floated primary tiny button"
-            onClick={ () => {
+      <>
+        <div className='computer tablet only four wide computer three wide tablet column'>
+          { this.props.open && this.props.lock && <ActiveBranchTurnCard.ServeButton onClick={ () => this.props.serveTurn(this.props) } /> }
+          { this.props.open && !this.props.lock && <ActiveBranchTurnCard.PrepareButton onClick={
+            () => {
               this.props.prepareTurn(this.props);
               this.props.onPreparation();
-            }}
-          >
-            Prepare
-          </button>
+            }} />
+          }
         </div>
-        }
 
-        { this.props.open && this.props.lock &&
-        <div className="ui content" style={ this.rightBannerStyle }>
-          <button
-            className="ui right floated primary tiny button"
-            onClick={ () => this.props.serveTurn(this.props) }
-          >
-            Serve
-          </button>
+        <div className='eight wide computer ten wide tablet sixteen wide mobile column turn wrapper'>
+          <div className={ this.getTurnCardClass() } onClick={ () => this.props.onClick(this.props.id) } >
+            <div className='ui content'>
+              <div className='right floated meta time'>
+                { moment(this.props.requestedTime).startOf('minute').fromNow() }
+              </div>
+              <div className='header'>
+                { this.props.product }
+              </div>
+              <div className='ui horizontal medium right floated label ewt'>
+                EWT
+                <div className="detail">
+                  Y min
+                </div>
+              </div>
+              <span className='description product'>
+                { this.props.name }
+              </span>
+              <div className='meta company'>
+                { this.props.company || 'Visitor' }
+              </div>
+            </div>
+          </div>
         </div>
-        }
 
-        { this.props.open && this.props.lock &&
-        <div className="ui content" style={ this.bannerStyle }>
-          <button
-            className="ui right floated negative tiny button"
-            style={{ background: 'rgb(228, 58, 58)' }}
-            onClick={ () => {
-              this.props.unprepareTurn(this.props);
-              this.props.onUnpreparation();
-            }}
-          >
-            Unprepare
-          </button>
+        <div className='computer tablet only four wide computer three wide tablet column'>
+          { this.props.open && !this.props.lock && <ActiveBranchTurnCard.RejectButton onClick={ () => this.props.rejectTurn(this.props) } /> }
+          { this.props.open && this.props.lock && <ActiveBranchTurnCard.UnprepareButton onClick={ () => {
+                this.props.unprepareTurn(this.props);
+                this.props.onUnpreparation();
+            }} />
+          }
         </div>
-        }
-      </div>
+        <div className='mobile only sixteen wide column action wrapper'>
+          { this.props.open && !this.props.lock && <ActiveBranchTurnCard.RejectButton onClick={ () => this.props.rejectTurn(this.props) } /> }
+          { this.props.open && this.props.lock && <ActiveBranchTurnCard.UnprepareButton onClick={ () => {
+                this.props.unprepareTurn(this.props);
+                this.props.onUnpreparation();
+            }} />
+          }
+          { this.props.open && this.props.lock && <ActiveBranchTurnCard.ServeButton onClick={ () => this.props.serveTurn(this.props) } /> }
+          { this.props.open && !this.props.lock && <ActiveBranchTurnCard.PrepareButton onClick={
+            () => {
+              this.props.prepareTurn(this.props);
+              this.props.onPreparation();
+            }} />
+          }
+        </div>
+
+        <div className='computer tablet only sixteen wide column blank'>
+        </div>
+      </>
     );
   }
 }

@@ -20,11 +20,9 @@ class BranchesDashboard extends React.Component {
 
   render() {
     return (
-      <div className='twelve wide column' style={{ paddingRight: 0 }}>
-        <div className='column'>
-          { this.state.branches && <BranchesList branches={ this.state.branches }/> }
-          { !this.state.branches.length && <LoadingPlaceHolder /> }
-        </div>
+      <div className='column'>
+        { this.state.branches && <BranchesList branches={ this.state.branches }/> }
+        { !this.state.branches.length && <LoadingPlaceHolder /> }
       </div>
     );
   }

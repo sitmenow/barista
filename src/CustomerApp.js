@@ -32,7 +32,7 @@ class CustomerApp extends React.Component {
         {/* Decorates Menu */}
         { React.cloneElement(this.props.children, { turns: customer.turns.active }) }
 
-        <div className='seven wide column'>
+        <div className='thirteen wide computer twelve wide tablet sixteen wide mobile column'>
           { this.props.menu.isProfileOptionSelected && <div> Profile </div> }
           { this.props.menu.isTurnsOptionSelected && <TurnsDashboard user={ user } customer={ customer } /> }
           { this.props.menu.isVenuesOptionSelected && branch && <TurnsDashboard user={ user } customer={ customer } branch={ branch } /> }

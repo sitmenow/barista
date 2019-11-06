@@ -16,7 +16,7 @@ class Menu extends React.Component {
   render() {
 
     return (
-      <div className="ui pointing menu">
+      <div className="ui pointing fluid menu">
         <a
           style={ this.itemStyle }
           className={ this.getItemClass(this.props.isActiveTurnsListEnabled) }
