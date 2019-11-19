@@ -7,11 +7,11 @@ module.exports = {
   },
   auth: {
     adapter: 'auth0',
-    domain: 'sitmenow.auth0.com',
-    clientID: '2c3q1IpRx9mCO8Mjl7bD1Md7uQcJ2wZg',
-    redirectUri: 'https://smn.grevych.com/',
+    domain: 'drinqueue.auth0.com',
+    clientID: 'LTC1V2xPqPaRP8rR5lpQnk4y4lqMvBMy',
+    redirectUri: 'https://drinqueue.com/',
     responseType: 'token id_token',
     scope: 'openid profile',
-    audience: 'https://coffee-shop.sitmenow.com',
+    audience: 'https://api.drinqueue.com',
   },
 };
