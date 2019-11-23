@@ -81,7 +81,7 @@ class TurnForm extends React.Component {
               />
             </div>
 
-            <div className="fields">
+            <div className="two fields">
               <div className="nine wide field">
                 <label>Name</label>
                 <input

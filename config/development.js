@@ -11,7 +11,7 @@ module.exports = {
     clientID: 'LTC1V2xPqPaRP8rR5lpQnk4y4lqMvBMy',
     redirectUri: 'http://localhost:3000',
     responseType: 'token id_token',
-    scope: 'openid profile',
+    scope: 'openid email profile',
     audience: 'https://api.drinqueue.com',
   },
 };

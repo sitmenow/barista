@@ -3,8 +3,6 @@ import React from 'react';
 
 class BranchCard extends React.Component {
   cardStyle = {
-    width: '30%',
-    minWidth: '250px',
     cursor: 'pointer',
   };
 

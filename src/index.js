@@ -8,6 +8,17 @@ import * as serviceWorker from './serviceWorker';
 import store from './store';
 import App from './App';
 
+var ws = new WebSocket('ws://localhost:8080/ws/');    // event emmited when connected
+console.log(ws);
+ws.onmessage = function (ev) {
+  console.log('websocket on message');
+  console.log(ev);
+}
+ws.onopen = function () {
+  console.log('websocket is connected ...')        // sending a send event to websocket server
+  ws.send('connected')
+}    // event emmited when receiving message 
+
 
 ReactDOM.render(
   <Router>

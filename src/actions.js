@@ -16,7 +16,7 @@ const config = process.env.NODE_CONFIG ? JSON.parse(process.env.NODE_CONFIG) : {
     clientID: 'LTC1V2xPqPaRP8rR5lpQnk4y4lqMvBMy',
     redirectUri: 'https://drinqueue.com/',
     responseType: 'token id_token',
-    scope: 'openid profile',
+    scope: 'openid email profile',
     audience: 'https://api.drinqueue.com',
   },
 };
@@ -25,6 +25,33 @@ const config = process.env.NODE_CONFIG ? JSON.parse(process.env.NODE_CONFIG) : {
 // TODO: Any unauthorized api call should dispatch a logout
 const api = new API(config.api).getInstance();
 const auth = new AuthFactory.create(config.auth);
+
+function notifyMe() {
+  var notification = new Notification("Hi there!");
+  // Let's check if the browser supports notifications
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  }
+
+  // Let's check whether notification permissions have already been granted
+  else if (Notification.permission === "granted") {
+    // If it's okay let's create a notification
+    var notification = new Notification("Hi there!");
+  }
+
+  // Otherwise, we need to ask the user for permission
+  else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+        var notification = new Notification("Hi there!");
+      }
+    });
+  }
+
+  // At last, if the user has denied notifications, and you 
+  // want to be respectful there is no need to bother them any more.
+}
 
 export const login = (hash, history) =>
   (dispatch: Function, getState: Function) => {
@@ -72,6 +99,15 @@ export const syncUser = () =>
     const token = localStorage.getItem('accessToken');
 
     if (!token || !user.id) logout()(dispatch, getState);
+
+    const ws = new WebSocket('ws://localhost:8080/ws/' + user.id);    // event emmited when connected
+    ws.onmessage = function (ev) {
+      console.log(ev);
+      notifyMe(ev.data);
+    }
+    ws.onopen = function() {
+      console.log(ws);
+    }
 
     api.setToken(token);
     api.getUser(user.id)

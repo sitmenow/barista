@@ -26,7 +26,7 @@ const mergeActiveCustomerTurnCardProps = (stateProps, dispatchProps, ownProps) =
 
 class ActiveCustomerTurnCard extends React.Component {
   static CancelButton = ({ onClick }) => (
-    <button className="ui left floated small negative button cancel" onClick={ onClick } >
+    <button className="ui small negative button cancel" onClick={ onClick } >
       Cancel
     </button>
   );

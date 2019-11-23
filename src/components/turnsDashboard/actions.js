@@ -70,7 +70,7 @@ export const createTurnAsCustomer = (turn) =>
       });
   };
 
-export const createTurnAsBarista = (turn) => 
+export const createTurnAsBarista = (turn) =>
   async (dispatch: Function, getState: Function) => {
     const branch = getState().app.selectedBranch;
     const apiBrand = new Brand(branch.brand, api.requester);

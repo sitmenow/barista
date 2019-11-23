@@ -5,7 +5,7 @@ import BranchCard from '../../components/branchCard/connected';
 class BranchesList extends React.Component {
   render() {
     return (
-      <div className="ui cards">
+      <div className="ui five doubling stackable cards">
         {
           this.props.branches.map(branch => (
             <BranchCard key={ branch.id } { ...branch } />
